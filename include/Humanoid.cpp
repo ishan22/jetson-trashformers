@@ -1,9 +1,11 @@
 #include "Humanoid.h"
+#include "Servo.h"
 
 #define DEFAULT_DEVICEINDEX 0
 
 Humanoid::Humanoid() { //CONSTRUCTOR
-
+    Servo* motor_1 = new Servo(8);
+    motor_1->SetSetpoint(400);
 }
 
 Humanoid::~Humanoid() {
