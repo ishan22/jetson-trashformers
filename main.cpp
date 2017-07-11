@@ -1,6 +1,7 @@
 #include "include/Humanoid.h"
 #include "include/BehaviorController.h"
 #include <iostream>
+#include <thread>
 
 int main (int argc, char** argv){
     Humanoid* humanoid = new Humanoid(argc, argv);
@@ -20,7 +21,7 @@ int main (int argc, char** argv){
     int areaTolerance = 0.20 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
 
     printf("TOLERANCE %i\n", xReactionTolerance);
-    while((inputChar = getchar()) != 27){
+    while(true){
         humanoid->detectnetController->SortBBArrayByTargetDistance();
 
         float xError = humanoid->detectnetController->GetErrorXOfTargetBB();
@@ -42,6 +43,7 @@ int main (int argc, char** argv){
             printf("ERROR: %f | STOPPING\n", xError);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } 
+        sleep(2);
     }
 
     //
