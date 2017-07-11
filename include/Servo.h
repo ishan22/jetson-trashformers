@@ -40,6 +40,6 @@ class Servo {
         	dynamixel::PortHandler* m_portHandler;
 		dynamixel::PacketHandler* packetHandler;
 
-        bool CheckError();
+        	bool CheckError();
 };
 #endif
