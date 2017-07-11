@@ -29,15 +29,15 @@ class Servo {
 		int SetPositionSetpoint(uint16_t setpoint);
 		int GetPosition();
         
-        int SetVelocitySetpoint(uint16_t setpoint);		
+        	int SetVelocitySetpoint(uint16_t setpoint);		
 	private: 
 		int m_dxl_id;
 		std::string* m_devicename;
-        int dxl_comm_result = COMM_TX_FAIL;
-        uint8_t dxl_error = 0;
-        uint16_t dxl_present_position;
+       		int dxl_comm_result = COMM_TX_FAIL;
+        	uint8_t dxl_error = 0;
+        	uint16_t dxl_present_position;
 
-        dynamixel::PortHandler* m_portHandler;
+        	dynamixel::PortHandler* m_portHandler;
 		dynamixel::PacketHandler* packetHandler;
 
         bool CheckError();
