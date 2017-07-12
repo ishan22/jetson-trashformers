@@ -42,7 +42,7 @@ int main (int argc, char** argv){
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
         } else {
             printf("ERROR: %f | STOPPING\n", xError);
-            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);
         } 
     }
 
