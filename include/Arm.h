@@ -37,7 +37,7 @@ class Arm {
         SerialHandler* m_serialHandler;
         Servo *shoulder, *bicep, *elbow, *claw;
         int pos_shoulder, pos_bicep, pos_elbow, pos_claw;
-        int pose_default[4] = {330, 590, 700, 610};       
+        int pose_default[4] = {330, 600, 700, 610};       
 };
 
 #endif //ARM_H_
