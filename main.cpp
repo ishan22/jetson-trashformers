@@ -30,7 +30,7 @@ int main (int argc, char** argv){
         printf("AREA: %f\n", bbArea);
         if(xError == NULL || bbArea == -1) {
             printf("XERROR DNE\n"); 
-            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);
         } else if(xError >= xReactionTolerance) {
             printf("YERROR: %f | TURNING RIGHT\n", xError);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
