@@ -21,17 +21,25 @@ int main (int argc, char** argv){
     int xReactionTolerance = 0.10 * humanoid->detectnetController->GetCameraWidth();
     int areaTolerance = 0.20 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
 
-    printf("TOLERANCE %i\n", xReactionTolerance);
+
+    bool bendDown;
     while(true){
         humanoid->detectnetController->SortBBArrayByTargetDistance();
-	printf("Orientation: %i\n", humanoid->detectnetController->GetCupOrientation());
-
+        printf("Orientation: %i\n", humanoid->detectnetController->GetCupOrientation());
+        
         float xError = humanoid->detectnetController->GetErrorXOfTargetBB();
         float bbArea = humanoid->detectnetController->GetAreaOfTargetBB(); 
+
         printf("AREA: %f\n", bbArea);
         if(xError == NULL || bbArea == -1) {
-            printf("XERROR DNE\n"); 
-            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            if(bendDown){
+                printf("XERROR DNE | BEND DOWN\n"); 
+               humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);
+            }
+            else {
+               printf("XERROR DNE | STOP\n"); 
+               humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            }
         } else if(xError >= xReactionTolerance) {
             printf("YERROR: %f | TURNING RIGHT\n", xError);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
@@ -43,9 +51,13 @@ int main (int argc, char** argv){
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } else {
-            printf("ERROR: %f | STOPPING\n", xError);
+            printf("ERROR: %f | STOP DUE TO LARGE AREA\n", xError);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } 
+
+        if( humanoid->detectnetController->GetCenterYFromBB(humanoid->detectnetController->bbArraySorted[0]) < ((1.0/5.0) * humanoid->detectnetController->GetCameraHeight()) ){
+            bendDown = true; 
+        }
 
         sleep(1);
     }
