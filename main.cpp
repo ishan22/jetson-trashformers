@@ -9,7 +9,8 @@ int main (int argc, char** argv){
        
     //Send STOP command to init zigbeecontroller
     humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-
+    
+    humanoid->arm->SetDefaultPose();
     //do nothing until detectNet is ready
     while(!humanoid->detectnetController->IsDetectNetReady()) {
     }
