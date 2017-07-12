@@ -23,7 +23,7 @@ int main (int argc, char** argv){
     int areaTolerance = 0.20 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
 
 
-    bool bendDown;
+    bool bendDown = false;
     while(true){
         humanoid->detectnetController->SortBBArrayByTargetDistance();
         printf("Orientation: %i\n", humanoid->detectnetController->GetCupOrientation());
@@ -56,7 +56,10 @@ int main (int argc, char** argv){
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } 
 
-        if( humanoid->detectnetController->GetCenterYFromBB(humanoid->detectnetController->bbArraySorted[0]) < ((1.0/5.0) * humanoid->detectnetController->GetCameraHeight()) ){
+        if(humanoid->detectnetController->bbArraySorted.size() < 1){
+            bendDown = false; 
+        }
+        else if( humanoid->detectnetController->GetCenterYFromBB(humanoid->detectnetController->bbArraySorted[0]) < ((1.0/5.0) * humanoid->detectnetController->GetCameraHeight()) ){
             bendDown = true; 
         }
 
