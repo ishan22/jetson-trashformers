@@ -118,7 +118,7 @@ float DetectNetController::GetErrorXOfTargetBB() {
    if(bbArraySorted.size() < 1) return NULL;
    float cX = GetCenterXFromBB(bbArraySorted[0]);
    if(cX == -1) return NULL;
-   return cX - GetCameraCenterX() + offset; 
+   return cX - GetCameraCenterX() - offset; 
 }
 
 float DetectNetController::GetErrorYOfTargetBB() {
