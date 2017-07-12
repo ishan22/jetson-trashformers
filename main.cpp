@@ -41,11 +41,13 @@ int main (int argc, char** argv){
         } else if(bbArea <= areaTolerance){
             printf("ERROR: %f | WALKING FORWARD\n", bbArea);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } else {
             printf("ERROR: %f | STOPPING\n", xError);
-            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);
+            humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         } 
-        sleep(2);
+
+        sleep(1);
     }
 
     //
