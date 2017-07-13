@@ -10,13 +10,23 @@ int main (int argc, char** argv){
     //Send STOP command to init zigbeecontroller
     humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     
-    //humanoid->arm->SetDefaultPose();
+    humanoid->arm->SetDefaultPose();
     
-    while(true) {
-        humanoid->arm->LivePose();
-        std::cin.ignore();
-    }    
-    //humanoid->detectnetController->JoinDetectThread();
+    std::cin.ignore();
+    
+    humanoid->arm->SetReadyPose();
+
+    std::cin.ignore();
+
+    humanoid->arm->SetGrabbingPose();
+
+    std::cin.ignore();
+
+    humanoid->arm->GrabCup();
+
+//    humanoid->arm->LivePose();
+  
+  //humanoid->detectnetController->JoinDetectThread();
     printf("Exiting..");
 
     return 0;

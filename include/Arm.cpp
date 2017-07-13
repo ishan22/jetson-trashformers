@@ -70,26 +70,40 @@ void Arm::SetDefaultPose() {
     Set(pose_default[0], pose_default[1], pose_default[2], pose_default[3], 60);
 }
 
+void Arm::SetReadyPose() {
+    Set(pose_ready[0], pose_ready[1], pose_ready[2], pose_ready[3], 60);   
+}
+
+void Arm::SetGrabbingPose() {
+    Set(pose_grabbing[0], pose_grabbing[1], pose_ready[2], pose_ready[3], 60);
+}
+
+void Arm::GrabCup() {
+    SetWrist(pose_grabbing[2], 60);
+    SetClaw(pose_grabbing[3], 200);
+}
+
 void Arm::LivePose() {
+    int shoulder, elbow, wrist, claw;
     std::cout << "Shoulder? ";
-    std::cin >> pos_shoulder;
+    std::cin >> shoulder;
     
-    SetShoulder(pos_shoulder, 1023);
+    SetShoulder(shoulder, 1023);
  
     std::cout << "Elbow? ";
-    std::cin >> pos_elbow;
+    std::cin >> elbow;
 
-    SetElbow(pos_elbow, 1023);
+    SetElbow(elbow, 900);
 
     std::cout << "Wrist? ";
-    std::cin >> pos_wrist;
+    std::cin >> wrist;
 
-    SetWrist(pos_wrist, 1023);
+    SetWrist(wrist, 1023);
 
     std::cout << "Claw? ";
-    std::cin >> pos_claw;
+    std::cin >> claw;
 
-    SetClaw(pos_claw, 1023);
+    SetClaw(claw, 1023);
 
     //Set(pos_shoulder, pos_elbow, pos_wrist, pos_claw, 1023);    
     
