@@ -43,7 +43,7 @@ void Arm::SetElbow(int pos, int vel){
     printf("Elbow: %d\n", pos);
     bicep->SetVelocitySetpoint(vel);
     bicep->SetPositionSetpoint(pos);
-    pos_bicep = pos;
+    pos_elbow = pos;
 }
 
 void Arm::SetWrist(int pos, int vel){ 
@@ -68,4 +68,29 @@ void Arm::SetClaw(int pos, int vel){
 
 void Arm::SetDefaultPose() {   
     Set(pose_default[0], pose_default[1], pose_default[2], pose_default[3], 60);
+}
+
+void Arm::LivePose() {
+    std::cout << "Shoulder? ";
+    std::cin >> pos_shoulder;
+    
+    SetShoulder(pos_shoulder, 1023);
+ 
+    std::cout << "Elbow? ";
+    std::cin >> pos_elbow;
+
+    SetElbow(pos_elbow, 1023);
+
+    std::cout << "Wrist? ";
+    std::cin >> pos_wrist;
+
+    SetWrist(pos_wrist, 1023);
+
+    std::cout << "Claw? ";
+    std::cin >> pos_claw;
+
+    SetClaw(pos_claw, 1023);
+
+    //Set(pos_shoulder, pos_elbow, pos_wrist, pos_claw, 1023);    
+    
 }

@@ -32,12 +32,13 @@ class Arm {
         void SetClaw(int pos_claw, int vel);
         
         void SetDefaultPose();
+        void LivePose();
        
     private:
         SerialHandler* m_serialHandler;
         Servo *shoulder, *bicep, *elbow, *claw;
-        int pos_shoulder, pos_bicep, pos_elbow, pos_claw;
-        int pose_default[4] = {330, 600, 700, 610};       
+        int pos_shoulder, pos_elbow, pos_wrist, pos_claw;
+        int pose_default[4] = {330, 600, 700, 610};   
 };
 
 #endif //ARM_H_
