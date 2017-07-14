@@ -11,7 +11,6 @@
 #include "Arm.h"
 #include "Servo.h"
 #include "SerialHandler.h"
-#include "Head.h"
 #include "BehaviorController.h"
 
 class Humanoid {
@@ -54,7 +53,6 @@ class Humanoid {
         Servo* motor_1;
         SerialHandler* serialHandler;
         Arm* arm;
-        Head* head;
         DetectNetController* detectnetController;
         BehaviorController* behaviorController; 
     private:

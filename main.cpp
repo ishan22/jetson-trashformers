@@ -6,7 +6,6 @@
 
 int main (int argc, char** argv){
     Humanoid* humanoid = new Humanoid(argc, argv);
-    int inputChar; 
        
     //Send STOP command to init zigbeecontroller
     humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
@@ -23,18 +22,21 @@ int main (int argc, char** argv){
     int xReactionTolerance = 0.10 * humanoid->detectnetController->GetCameraWidth();
     int areaTolerance = 0.50 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
 
-
+    bool arrayExists = false;
     bool bendDown = false;
     //while((inputChar = getchar()) != 27){
     while(true){
         humanoid->detectnetController->SortBBArrayByTargetDistance();
-        printf("Orientation: %i\n", humanoid->detectnetController->GetCupOrientation());
+        printf("Orientation: %i\n", (int)(humanoid->detectnetController->GetCupOrientation()));
         
+        if(humanoid->detectnetController->bbArraySorted.size() > 0) arrayExists = true;
+        else arrayExists = false;
+       
         float xError = humanoid->detectnetController->GetErrorXOfTargetBB();
         float bbArea = humanoid->detectnetController->GetAreaOfTargetBB(); 
 
         printf("AREA: %f\n", bbArea);
-        if(xError == NULL || bbArea == -1) {
+        if(!arrayExists || bbArea == -1) {
             if(bendDown){
                 humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
                 humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
@@ -53,7 +55,7 @@ int main (int argc, char** argv){
                humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             }
         } else if(xError >= xReactionTolerance) {
-            printf("YERROR: %f | TURNING RIGHT\n", xError);
+            printf("XERROR: %f | TURNING RIGHT\n", xError);
             humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
         } else if(xError <= (xReactionTolerance)*-1) {
             printf("XERROR: %f | TURNING LEFT\n", xError);
@@ -82,8 +84,7 @@ int main (int argc, char** argv){
 
         sleep(1);
     }
-
-    //
+    
     //humanoid->detectnetController->JoinDetectThread();
     printf("Exiting..");
 

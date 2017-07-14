@@ -113,18 +113,18 @@ float DetectNetController::GetCenterYFromBB(float* bb) {
     else return -1;
 }
 
+//check if array exists b4 calling method
 float DetectNetController::GetErrorXOfTargetBB() {
    const float offset = (1.0/4.0) * (GetCameraWidth());
-   if(bbArraySorted.size() < 1) return NULL;
    float cX = GetCenterXFromBB(bbArraySorted[0]);
-   if(cX == -1) return NULL;
    return cX - GetCameraCenterX() - offset; 
 }
 
+//check if array exists b4 calling method
 float DetectNetController::GetErrorYOfTargetBB() {
-   if(bbArraySorted.size() < 1) return NULL;
+   //if(bbArraySorted.size() < 1) return NULL;
    float cY = GetCenterYFromBB(bbArraySorted[0]);
-   if(cY == -1) return NULL;
+   //if(cY == -1) return NULL;
    return cY - GetCameraCenterY(); 
 }
 
