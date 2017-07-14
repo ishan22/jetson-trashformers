@@ -14,14 +14,26 @@
 #include "Head.h"
 #include "BehaviorController.h"
 
+/**
+ * @brief holds the instances of many of the hardware/software modules of the program.
+ */
 class Humanoid {
     public:
+        /**
+         * Constructor for Humanoid:
+         * Creates instances of serialhandler, behaviorcontroller, 
+         * arm, head, detectnet controller, and keyboardcontroller
+         */
         Humanoid(int argc, char** argv);
-        virtual ~Humanoid();
-        
-        double GetCupCenterY();
-        double GetCupCenterX();
 
+        /**
+         * Deconstructor for Humanoid
+         */
+        virtual ~Humanoid();
+
+        /**
+         * Runs a while loop in keyboardController to send zigbee commands via keyboard input
+         */
         void UseKeyboard();
         
         //Movement commands through Zigbee
@@ -51,7 +63,6 @@ class Humanoid {
         void GetUpFacingUp();
         void GetUpFacingDown();
 
-        Servo* motor_1;
         SerialHandler* serialHandler;
         Arm* arm;
         Head* head;

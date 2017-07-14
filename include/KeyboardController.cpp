@@ -18,9 +18,7 @@ void KeyboardController::Init(){
 
 void KeyboardController::RunInput(){
     while(true){
-        //zigb->Stop();
         c = getchar();
-        //printf("%d \n", c);
         
         if(c == ' '){
             printf("Stopping!\n");

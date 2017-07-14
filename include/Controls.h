@@ -1,6 +1,10 @@
 #ifndef CONTROLS_H_
 #define CONTROLS_H_
 
+/**
+* Header file containing zigbee control values
+*/
+
 /* ALL ZIGB CONTROLS */
 static const int BUTTON_U = 1;
 static const int BUTTON_D = 2;
