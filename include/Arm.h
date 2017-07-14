@@ -24,17 +24,22 @@ class Arm {
         Arm(SerialHandler* serialHandler);
         virtual ~Arm();
 
+
+        enum class ArmPose {
+            DEFAULT,
+            READY,
+            GRABBING, 
+            GRAB
+        };
+
         void Set(int pos_shoulder, int pos_elbow, int pos_wrist, int pos_claw, int vel_setpoint);
 
         void SetShoulder(int pos_shoulder, int vel);
         void SetElbow(int pos_elbow, int vel);
         void SetWrist(int pos_wrist, int vel);
         void SetClaw(int pos_claw, int vel);
-        
-        void SetDefaultPose();
-        void SetReadyPose();
-        void SetGrabbingPose();
-        void GrabCup(); 
+
+        void SetPose(ArmPose pose);
        
     private:
         SerialHandler* m_serialHandler;
@@ -43,6 +48,11 @@ class Arm {
         int pose_default[4] = {330, 600, 700, 610};   
         int pose_ready[4] = {650, 700, 350, 220};
         int pose_grabbing[4] = {650, 480, 250, 610};
+        
+        void SetDefaultPose();
+        void SetReadyPose();
+        void SetGrabbingPose();
+        void GrabCup(); 
 };
 
 #endif //ARM_H_

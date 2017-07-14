@@ -82,3 +82,21 @@ void Arm::GrabCup() {
     SetWrist(pose_grabbing[2], 200);
     SetClaw(pose_grabbing[3], 800);
 }
+
+void Arm::SetPose(ArmPose pose) {
+    switch(pose) {
+        default: 
+        case ArmPose::DEFAULT:
+            SetDefaultPose();
+            break;
+        case ArmPose::READY:
+            SetReadyPose();
+            break;
+        case ArmPose::GRABBING:
+            SetGrabbingPose();
+            break;
+        case ArmPose::GRAB:
+            GrabCup();
+            break;
+    }
+}
