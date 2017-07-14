@@ -35,11 +35,10 @@ class Arm {
         void SetReadyPose();
         void SetGrabbingPose();
         void GrabCup(); 
-        void LivePose();
        
     private:
         SerialHandler* m_serialHandler;
-        Servo *shoulder, *bicep, *elbow, *claw;
+        Servo *shoulder, *elbow, *wrist, *claw;
         int pos_shoulder, pos_elbow, pos_wrist, pos_claw;
         int pose_default[4] = {330, 600, 700, 610};   
         int pose_ready[4] = {650, 700, 350, 220};
