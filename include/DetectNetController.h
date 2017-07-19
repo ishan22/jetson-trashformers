@@ -40,6 +40,8 @@ class DetectNetController {
         float GetAreaOfTargetBB();
         float GetErrorXOfTargetBB();
         float GetErrorYOfTargetBB();
+        int GetClassIDFromUnsortedBBNum();
+    
 
         enum class CupOrientation {
                 VERTICAL=0,
@@ -50,6 +52,8 @@ class DetectNetController {
         DetectNetController::CupOrientation GetCupOrientation();
 
     private:
+        float* GetConfCPU();
+
         float** bbArrayUnsorted;
         volatile int numberOfDetectedBB;
 

@@ -25,6 +25,7 @@ bool signal_recieved = false;
 float* bb = NULL;
 float** boxes = NULL;
 int numBoundingBoxes = 0;
+float* currentConfCPU = NULL;
 int actualNumBB = 0;
 uint32_t camera_Height = 0;
 uint32_t camera_Width = 0;
@@ -51,6 +52,10 @@ void setCameraPort(int source){
 
 float** getBoundingBoxArray(){
     return boxes;
+}
+
+float* getConfCPU(){
+    return currentConfCPU;
 }
 
 int *getNumBoundingBox(){
@@ -124,7 +129,7 @@ int runDetectNet( int argc, char** argv )
 	/*
 	 * create detectNet
 	 */
-	detectNet* net = detectNet::Create("networks/deploy.prototxt", "networks/snapshot_iter_84.caffemodel", "networks/mean.binaryproto");
+	detectNet* net = detectNet::Create("networks/deploy.prototxt", "networks/snapshot_iter_9792.caffemodel", "networks/mean.binaryproto");
 	
 	if( !net )
 	{
@@ -219,6 +224,7 @@ int runDetectNet( int argc, char** argv )
 		{
 		//	printf("%i bounding boxes detected EDITED\n", numBoundingBoxes);
             actualNumBB = numBoundingBoxes;
+            currentConfCPU = confCPU;
 		
 			int lastClass = 0;
 			int lastStart = 0;

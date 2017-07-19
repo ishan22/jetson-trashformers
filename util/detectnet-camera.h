@@ -9,6 +9,7 @@ int runDetectNet(int argc, char** argv);
 float** getBoundingBoxArray();
 int* getNumBoundingBox();
 bool getStopSignal();
+float* getConfCPU();
 
 uint32_t getCameraHeight();
 uint32_t getCameraWidth();
