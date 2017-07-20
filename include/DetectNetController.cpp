@@ -5,7 +5,7 @@ DetectNetController::DetectNetController(int argc, char** argv){
     m_argc = argc;
     m_argv = argv;
     
-    SetCameraPort(0);
+    SetCameraPort(1);
     detectNetThread = new std::thread(&DetectNetController::runThread, this);
 }
 
@@ -34,7 +34,7 @@ void DetectNetController::ReadCameraResolution(){
 }
 
 //ARRAY SORTING
-std::vector<float*> DetectNetController::SortBBArrayByTargetDistance(){ 
+std::vector<std::array<float, 5>> DetectNetController::SortBBArrayByTargetDistance(){ 
         bbArrayUnsorted = ReadUnsortedBBArray();
         numberOfDetectedBB = *ReadNumberOfDetectedBB();
         
@@ -46,17 +46,17 @@ std::vector<float*> DetectNetController::SortBBArrayByTargetDistance(){
         for(int i=0; i<numberOfDetectedBB * 4; i+=4){
             float* bb = bbArrayUnsorted[0];
             int classID = GetClassIDFromUnsortedBBNum(boxNum);
-            float arr[5] = { bb[i], bb[i+1], bb[i+2], bb[i+3], classID};
-            float* arrptr = arr;
-            bbArraySorted.push_back(arrptr);
+            std::array<float, 5> arr = { bb[i], bb[i+1], bb[i+2], bb[i+3], classID};
+            //float* arrptr = arr;
+            bbArraySorted.push_back(arr);
  
-            printf("BB #%i: (X1: %f, Y1: %f), (X2:%f, Y2: %f), classID: %i\n", boxNum, arrptr[0], arrptr[1], arrptr[2], arrptr[3], classID);
+            printf("BB #%i: (X1: %f, Y1: %f), (X2:%f, Y2: %f), classID: %i\n", boxNum, arr[0], arr[1], arr[2], arr[3], classID);
             boxNum++;
         }
 
         if(numberOfDetectedBB > 0){
             //Sort array based on the bounding boxes' distances from center of camera
-            std::sort(bbArraySorted.begin(), bbArraySorted.end(), [this](float* a, float* b) {
+            std::sort(bbArraySorted.begin(), bbArraySorted.end(), [this](std::array<float, 5> a, std::array<float, 5> b) {
                 float tmpCenterX1 = this->GetCenterXFromBB(a);
                 float tmpCenterX2 = this->GetCenterXFromBB(b);
                 
@@ -68,21 +68,22 @@ std::vector<float*> DetectNetController::SortBBArrayByTargetDistance(){
                 
                 return distance1 < distance2;
             });
-        }
+        }        
+
         std::cout << std::endl;
 
         return bbArraySorted;
 }
 
-float* DetectNetController::GetTargetBB(){
-    std::vector<float*> sortedArray = SortBBArrayByTargetDistance();
+std::array<float, 5> DetectNetController::GetTargetBB(){
+    std::vector< std::array<float, 5> > sortedArray = SortBBArrayByTargetDistance();
     if(sortedArray.size() > 0) return sortedArray[0];
-    else return nullptr;
+    else return std::array<float, 5>();
 }
 
 float DetectNetController::GetAreaOfTargetBB(){
     if(bbArraySorted.size() < 1) return -1;
-    float* bb = bbArraySorted[0];
+    std::array<float, 5> bb = bbArraySorted[0];
     return (bb[2]-bb[0]) * (bb[3]-bb[1]);
 }
 
@@ -106,17 +107,17 @@ bool DetectNetController::ReadStopSignal(){
     return getStopSignal();
 }
 
-float DetectNetController::GetCenterXFromBB(float* bb) {
-    if(bb){
-        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[2] = %0.0f \n");
+float DetectNetController::GetCenterXFromBB(std::array<float, 5> bb) {
+    if(!bb.empty()){
+        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[2] = %0.0f \n", bb[0], bb[2]);
         return (bb[0] + bb[2]) / 2.0;
     }
     else return -1;
 }
 
-float DetectNetController::GetCenterYFromBB(float* bb) {
-    if(bb){ 
-        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[3] = %0.0f \n");
+float DetectNetController::GetCenterYFromBB(std::array<float, 5> bb) {
+    if(!bb.empty()){ 
+        printf("GetCenterXFromBB: bb[1] = %0.0f, bb[3] = %0.0f \n", bb[1], bb[3]);
         return (bb[1] + bb[3]) / 2.0;   
     }
     else return -1;
@@ -172,8 +173,8 @@ float* DetectNetController::GetConfCPU(){
 }
 
 DetectNetController::CupOrientation DetectNetController::GetCupOrientation(){
-    float* targetCup = GetTargetBB();
-    if(targetCup == NULL) return CupOrientation::UKNOWN;
+    std::array<float, 5> targetCup = GetTargetBB();
+    if(targetCup.empty()) return CupOrientation::UKNOWN;
     float width = targetCup[2] - targetCup[0];
     float height = targetCup[3] - targetCup[1];
     if(width > height) return CupOrientation::HORIZONTAL;
