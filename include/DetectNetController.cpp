@@ -42,16 +42,18 @@ std::vector<float*> DetectNetController::SortBBArrayByTargetDistance(){
         
         printf("Found %i Bounding Boxes.\n", numberOfDetectedBB);
         
-        int boxNum = 0; 
+        int boxNum = 0; //used to keep track of which box we are on in the unsorted bb array 
         for(int i=0; i<numberOfDetectedBB * 4; i+=4){
             float* bb = bbArrayUnsorted[0];
-            float arr [4] = { bb[i], bb[i+1], bb[i+2], bb[i+3] };
+            int classID = GetClassIDFromUnsortedBBNum(boxNum);
+            float arr[5] = { bb[i], bb[i+1], bb[i+2], bb[i+3], classID};
             float* arrptr = arr;
             bbArraySorted.push_back(arrptr);
  
-            printf("BB #%i: (X1: %f, Y1: %f), (X2:%f, Y2: %f)\n", boxNum, arrptr[0], arrptr[1], arrptr[2], arrptr[3]);
-            ++boxNum;
-}
+            printf("BB #%i: (X1: %f, Y1: %f), (X2:%f, Y2: %f), classID: %i\n", boxNum, arrptr[0], arrptr[1], arrptr[2], arrptr[3], classID);
+            boxNum++;
+        }
+
         if(numberOfDetectedBB > 0){
             //Sort array based on the bounding boxes' distances from center of camera
             std::sort(bbArraySorted.begin(), bbArraySorted.end(), [this](float* a, float* b) {

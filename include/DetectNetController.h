@@ -13,7 +13,9 @@ class DetectNetController {
         DetectNetController(int argc, char** argv);
         virtual ~DetectNetController();
 
-        //Structure of Bounding Box: [x1][y1][x2][y2] (bottom left: x1, y1; top right: x2, y2)
+        //Structure of Unsorted Bounding Box: [x1][y1][x2][y2] (bottom left: x1, y1; top right: x2, y2)
+
+        //Structure of Sorted Bounding Box: [x1][y1][x2][y2] (bottom left: x1, y1; top right: x2, y2), ClassID
         std::vector<float*> SortBBArrayByTargetDistance();
         std::vector<float*> bbArraySorted;
 
