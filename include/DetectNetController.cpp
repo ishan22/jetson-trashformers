@@ -160,12 +160,12 @@ float DetectNetController::GetCameraCenterY(){
     return cameraCenterY;
 }
 
-int GetClassIDFromUnsortedBBNum(int bbNum){
+int DetectNetController::GetClassIDFromUnsortedBBNum(int bbNum){
     float* confCPU = GetConfCPU();
-    return (int)confCPU[bbNum*2+1]//process to acquire class # obtained from detectnet-camera.cpp
+    return (int)confCPU[bbNum*2+1];//process to acquire class # obtained from detectnet-camera.cpp
 }
 
-float* GetConfCPU(){
+float* DetectNetController::GetConfCPU(){
     return getConfCPU();
 }
 

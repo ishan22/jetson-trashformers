@@ -40,7 +40,7 @@ class DetectNetController {
         float GetAreaOfTargetBB();
         float GetErrorXOfTargetBB();
         float GetErrorYOfTargetBB();
-        int GetClassIDFromUnsortedBBNum();
+        int GetClassIDFromUnsortedBBNum(int bbNum);
     
 
         enum class CupOrientation {
