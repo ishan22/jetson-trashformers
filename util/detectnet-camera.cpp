@@ -124,7 +124,7 @@ int runDetectNet( int argc, char** argv )
 	/*
 	 * create detectNet
 	 */
-	detectNet* net = detectNet::Create("networks/deploy.prototxt", "networks/snapshot_iter_84.caffemodel", "networks/mean.binaryproto");
+	detectNet* net = detectNet::Create("networks/deploy.prototxt", "networks/snapshot_iter_9792.caffemodel", "networks/mean.binaryproto");
 	
 	if( !net )
 	{
