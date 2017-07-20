@@ -107,12 +107,18 @@ bool DetectNetController::ReadStopSignal(){
 }
 
 float DetectNetController::GetCenterXFromBB(float* bb) {
-    if(bb) return (bb[0] + bb[2]) / 2.0;
+    if(bb){
+        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[2] = %0.0f \n");
+        return (bb[0] + bb[2]) / 2.0;
+    }
     else return -1;
 }
 
 float DetectNetController::GetCenterYFromBB(float* bb) {
-    if(bb) return (bb[1] + bb[3]) / 2.0;
+    if(bb){ 
+        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[3] = %0.0f \n");
+        return (bb[1] + bb[3]) / 2.0;   
+    }
     else return -1;
 }
 

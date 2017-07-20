@@ -70,6 +70,10 @@ void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
     else {
         grab = false; 
         printf("GRAB: TOO HIGH\n");
+        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+        printf("CENTER X of BB: %f\n", detectnetController->GetCenterXFromBB(detectnetController->bbArraySorted[0]) );
+        std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;
     }
     sleep(1);
 
