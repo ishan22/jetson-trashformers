@@ -13,6 +13,9 @@ int main (int argc, char** argv){
     humanoid->arm->SetPose(Arm::ArmPose::DEFAULT);
     //do nothing until detectNet is ready
     while(!humanoid->detectnetController->IsDetectNetReady()) {
+        if(humanoid->detectnetController->ReadStopSignal()){
+            return 1; //CTRL ^C has been pressed
+        }
     }
 
 
