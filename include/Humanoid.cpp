@@ -59,14 +59,17 @@ void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
 
     if(detectnetController->bbArraySorted.size() < 1){
         grab = false; 
+        printf("GRAB: NO CUP\n");
     }
     else if( detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
         grab = true; 
-        //printf("CENTER Y of BB: %f\n", humanoid->detectnetController->GetCenterYFromBB(humanoid->detectnetController->bbArraySorted[0]) );
-        //printf("image threshold: %f\n", ((2.0/3.0) * humanoid->detectnetController->GetCameraHeight()) );
+        printf("GRAB: TRUE\n");
+        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
     }
     else {
         grab = false; 
+        printf("GRAB: TOO HIGH\n");
     }
     sleep(1);
 
