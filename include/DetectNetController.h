@@ -6,11 +6,12 @@
 #include <thread>
 #include <algorithm>
 #include <vector>
+#include <string>
 #include "../util/detectnet-camera.h"
 
 class DetectNetController {
     public:
-        DetectNetController(int argc, char** argv);
+        DetectNetController(std::string model);
         virtual ~DetectNetController();
 
         //Structure of Unsorted Bounding Box: [x1][y1][x2][y2] (bottom left: x1, y1; top right: x2, y2)
@@ -72,8 +73,7 @@ class DetectNetController {
         std::thread* detectNetThread;
 
         //Arguments
-        int m_argc;
-        char** m_argv;
+        std::string m_model;
 };
 
 #endif

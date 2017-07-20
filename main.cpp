@@ -4,8 +4,11 @@
 #include <iostream>
 #include <thread>
 
+const std::string MODEL ("9792");
+
 int main (int argc, char** argv){
-    Humanoid* humanoid = new Humanoid(argc, argv);
+    
+    Humanoid* humanoid = new Humanoid(MODEL);
 
     //Send STOP command to init zigbeecontroller
     humanoid->behaviorController->ChangeState(BehaviorController::ControllerState::STOP);

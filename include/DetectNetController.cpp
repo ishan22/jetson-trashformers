@@ -1,11 +1,10 @@
 #include "DetectNetController.h"
 
-DetectNetController::DetectNetController(int argc, char** argv){
+DetectNetController::DetectNetController(std::string model){
     //Run the DetectNet Program
-    m_argc = argc;
-    m_argv = argv;
+    m_model = model;
     
-    SetCameraPort(1);
+    SetCameraPort(0);
     detectNetThread = new std::thread(&DetectNetController::runThread, this);
 }
 
@@ -15,7 +14,7 @@ DetectNetController::~DetectNetController(){
 
 //THREAD FUNCTIONS
 void DetectNetController::runThread(){
-    runDetectNet(m_argc, m_argv);
+    runDetectNet(m_model);
 }
 
 void DetectNetController::JoinDetectThread(){

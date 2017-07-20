@@ -2,13 +2,13 @@
 
 #define DEFAULT_ZIGBEE_DEVICEINDEX 0
 
-Humanoid::Humanoid(int argc, char** argv) { //CONSTRUCTOR
+Humanoid::Humanoid(std::string model) { //CONSTRUCTOR
 
     serialHandler = new SerialHandler();
     zigb = serialHandler->GetZigbController();
     behaviorController = new BehaviorController(serialHandler);    
     arm = new Arm(serialHandler);
-    detectnetController = new DetectNetController(argc, argv);
+    detectnetController = new DetectNetController(model);
     keyboardController = new KeyboardController(zigb);
 }
 

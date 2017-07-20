@@ -2126,7 +2126,7 @@ layer {
     decay_mult: 0.0
   }
   convolution_param {
-    num_output: 2
+    num_output: 3
     kernel_size: 1
     weight_filler {
       type: "xavier"
