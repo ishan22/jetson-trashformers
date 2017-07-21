@@ -4,7 +4,7 @@ DetectNetController::DetectNetController(std::string model){
     //Run the DetectNet Program
     m_model = model;
     
-    SetCameraPort(1);
+    SetCameraPort(0);
     detectNetThread = new std::thread(&DetectNetController::runThread, this);
 }
 
