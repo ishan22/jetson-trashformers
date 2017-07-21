@@ -4,7 +4,7 @@ DetectNetController::DetectNetController(std::string model){
     //Run the DetectNet Program
     m_model = model;
     
-    SetCameraPort(0);
+    SetCameraPort(1);
     detectNetThread = new std::thread(&DetectNetController::runThread, this);
 }
 
@@ -124,16 +124,16 @@ float DetectNetController::GetCenterYFromBB(std::array<float, 5> bb) {
 
 float DetectNetController::GetErrorXOfTargetBB() {
    const float offset = (1.0/4.0) * (GetCameraWidth());
-   if(bbArraySorted.size() < 1) return NULL;
+   if(bbArraySorted.size() < 1) return 0.0;
    float cX = GetCenterXFromBB(bbArraySorted[0]);
-   if(cX == -1) return NULL;
+   if(cX == -1) return 0.0;
    return cX - GetCameraCenterX() - offset; 
 }
 
 float DetectNetController::GetErrorYOfTargetBB() {
-   if(bbArraySorted.size() < 1) return NULL;
+   if(bbArraySorted.size() < 1) return 0.0;
    float cY = GetCenterYFromBB(bbArraySorted[0]);
-   if(cY == -1) return NULL;
+   if(cY == -1) return 0.0;
    return cY - GetCameraCenterY(); 
 }
 

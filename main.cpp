@@ -4,7 +4,7 @@
 #include <iostream>
 #include <thread>
 
-const std::string MODEL ("9792");
+const std::string MODEL ("84");
 
 int main (int argc, char** argv){
     
