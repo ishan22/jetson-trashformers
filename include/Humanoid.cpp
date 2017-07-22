@@ -2,15 +2,13 @@
 
 #define DEFAULT_ZIGBEE_DEVICEINDEX 0
 
-Humanoid::Humanoid(int argc, char** argv) { //CONSTRUCTOR
+Humanoid::Humanoid(int camPort, std::string model) { //CONSTRUCTOR
+
     serialHandler = new SerialHandler();
+    zigb = serialHandler->GetZigbController();
     behaviorController = new BehaviorController(serialHandler);    
     arm = new Arm(serialHandler);
-    head = new Head(serialHandler);
-
-    zigb = serialHandler->GetZigbController();
-
-    detectnetController = new DetectNetController(argc, argv);
+    detectnetController = new DetectNetController(camPort, model);
     keyboardController = new KeyboardController(zigb);
 }
 
@@ -22,70 +20,71 @@ void Humanoid::UseKeyboard(){
     keyboardController->Init();
     keyboardController->RunInput();
 }
+        
+void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
 
-void Humanoid::Stop(){
-    zigb->Stop();
+    detectnetController->SortBBArrayByTargetDistance();
+    float xError = detectnetController->GetErrorXOfTargetBB();
+    float bbArea = detectnetController->GetAreaOfTargetBB(); 
+
+    if(bbArea == -1) {
+        if(grab){
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+            printf("BEND DOWN\n"); 
+            sleep(1);
+            GrabVerticalCup();
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            grab = false; 
+        }
+        else {
+           printf("STOP\n"); 
+           behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+        }
+    } else if(xError >= xReactionTolerance) {
+        printf("TURNING RIGHT\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
+    } else if(xError <= (xReactionTolerance)*-1) {
+        printf("TURNING LEFT\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+    } else if(bbArea <= areaTolerance){
+        printf("WALKING FORWARD\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+        behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    } else {
+        printf("STOP DUE TO LARGE AREA\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    } 
+
+    if(detectnetController->bbArraySorted.size() < 1){
+        grab = false; 
+        printf("GRAB: NO CUP\n");
+    }
+    else if( detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
+        grab = true; 
+        printf("GRAB: TRUE\n");
+        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+    }
+    else {
+        grab = false; 
+        printf("GRAB: TOO HIGH\n");
+        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+        printf("CENTER X of BB: %f\n", detectnetController->GetCenterXFromBB(detectnetController->bbArraySorted[0]) );
+        std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;
+    }
+    sleep(1);
+
 }
 
-void Humanoid::WalkForward(){
-    zigb->SendCommand(BUTTON_WALK_FORWARD);
-}
-void Humanoid::WalkBackward(){
-    zigb->SendCommand(BUTTON_WALK_BACKWARD);
-}
-
-
-void Humanoid::TurnLeft(){
-    zigb->SendCommand(BUTTON_TURN_LEFT);
-}
-void Humanoid::TurnRight(){
-    zigb->SendCommand(BUTTON_TURN_RIGHT);
-}
-
-
-void Humanoid::WalkForwardLeft(){
-    zigb->SendCommand(BUTTON_WALK_FORWARD_LEFT);
-}
-void Humanoid::WalkForwardRight(){
-    zigb->SendCommand(BUTTON_WALK_FORWARD_RIGHT);
-}
-
-
-void Humanoid::SidestepLeft(){
-    zigb->SendCommand(BUTTON_SIDESTEP_LEFT);
-}
-void Humanoid::SidestepRight(){
-    zigb->SendCommand(BUTTON_SIDESTEP_RIGHT);
-}
-
-
-void Humanoid::FastSidestepLeft(){
-    zigb->SendCommand(BUTTON_SIDESTEP_FAST_LEFT);
-}
-void Humanoid::FastSidestepRight(){
-    zigb->SendCommand(BUTTON_SIDESTEP_FAST_RIGHT);
-}
-
-
-void Humanoid::StepDiagonalFrontalLeft(){
-    zigb->SendCommand(BUTTON_DIAGONAL_FRONTAL_LEFT);
-}
-void Humanoid::StepDiagonalFrontalRight(){
-    zigb->SendCommand(BUTTON_DIAGONAL_FRONTAL_RIGHT);
-}
-
-
-void Humanoid::StepDiagonalDorsalLeft(){
-    zigb->SendCommand(BUTTON_DIAGONAL_DORSAL_LEFT);
-}
-void Humanoid::StepDiagonalDorsalRight(){
-    zigb->SendCommand(BUTTON_DIAGONAL_DORSAL_RIGHT);
-}
-
-
-void Humanoid::GetUpFacingUp(){
-    zigb->SendCommand(BUTTON_GET_UP_FACING_UP);
-}
-void Humanoid::GetUpFacingDown(){
-    zigb->SendCommand(BUTTON_GET_UP_FACING_DOWN);
+void Humanoid::GrabVerticalCup() { 
+    arm->SetPose(Arm::ArmPose::READY);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::GRABBING);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::GRAB);
+    sleep(2);
+    arm->SetPose(Arm::ArmPose::DEFAULT);
 }

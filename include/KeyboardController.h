@@ -41,12 +41,12 @@ class KeyboardController{
         */
         void Terminate();
 
-        
+
     private:
         ZigbController *zigb;
         struct termios old_tio, new_tio;
         unsigned char c;
-        
+
 };
 
 #endif //KEYBOARDCONTROLLER_H_
