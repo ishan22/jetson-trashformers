@@ -26,16 +26,44 @@
 */
 class Servo {
     public:				
+        
+        /**
+         * Creates a Servo object with specified PortHandler
+         * and ID number
+         */
         Servo(int dxl_id, dynamixel::PortHandler* portHandler);
-        Servo(int dxl_id, std::string* devicename, dynamixel::PortHandler* portHandler);
+        
         virtual ~Servo();
 
+        /**
+         * Enables the servo to be able to move
+         */
         int Enable(bool enable);
+        
+        /**
+         * Sets the position for the servo to move to
+         * (setpoint must be between 0 and 1023)
+         */
         int SetPositionSetpoint(uint16_t setpoint);
+        
+        /**
+         * Returns the current position of the servo
+         */
         int GetPosition();
 
-        int SetVelocitySetpoint(uint16_t setpoint);		
+
+        /**
+         * Sets the velocity of the servo
+         * (setpoint must be between 0 and 1023)
+         */
+        int SetVelocitySetpoint(uint16_t setpoint);
+        
+        /**
+         * Sets the torque of the motor to be at a
+         * safe value to prevent overload errors
+         */		
         void SetSafeTorque();
+    
     private: 
         int m_dxl_id;
         std::string* m_devicename;
@@ -45,7 +73,10 @@ class Servo {
 
         dynamixel::PortHandler* m_portHandler;
         dynamixel::PacketHandler* packetHandler;
-
+        
+        /**
+         * Checks for communication error
+         */
         bool CheckError();
 };
 #endif

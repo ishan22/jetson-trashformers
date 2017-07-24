@@ -20,7 +20,7 @@
 #define CLAW_MIN 220
 
 /**
- * @brief holds the instances of servos for the arm and
+ * Holds the instances of servos for the arm and
  * methods to control the motion of each individual joint
  * and all joints at once.
  */
@@ -47,45 +47,45 @@ class Arm {
 
         /**
          * Sets the position and velocity of each joint in the arm
-         * @param pos_shoulder the position setpoint of the shoulder (150 - 800)
-         * @param pos_elbow the position setpoint of the elbow (350 - 1023)
-         * @param pos_wrist the position setpoint of the wrist (250 - 762)
-         * @param pos_claw the position setpoint of the claw (220 - 610)
-         * @param vel_setpoint the velocity setpoint of the arm (0 - 1023)
+         * pos_shoulder the position setpoint of the shoulder (150 - 800)
+         * pos_elbow the position setpoint of the elbow (350 - 1023)
+         * pos_wrist the position setpoint of the wrist (250 - 762)
+         * pos_claw the position setpoint of the claw (220 - 610)
+         * vel_setpoint the velocity setpoint of the arm (0 - 1023)
          */
         void Set(int pos_shoulder, int pos_elbow, int pos_wrist, int pos_claw, int vel_setpoint);
 
         /**
          * Sets the position and velocity of the shoulder
-         * @param pos_shoulder the position setpoint of the shoulder (150 - 800)
-         * @param vel_setpoint the velocity setpoint of the shoulder(0 - 1023)
+         * pos_shoulder the position setpoint of the shoulder (150 - 800)
+         * vel_setpoint the velocity setpoint of the shoulder(0 - 1023)
          */
         void SetShoulder(int pos_shoulder, int vel);
         
         /**
          * Sets the position and velocity of the elbow
-         * @param pos_elbow the position setpoint of the elbow (350 - 1023)
-         * @param vel_setpoint the velocity setpoint of the elbow (0 - 1023)
+         * pos_elbow the position setpoint of the elbow (350 - 1023)
+         * vel_setpoint the velocity setpoint of the elbow (0 - 1023)
          */
         void SetElbow(int pos_elbow, int vel);
         
         /**
          * Sets the position and velocity of the wrist
-         * @param pos_wrist the position setpoint of the wrist (250 - 762)
-         * @param vel_setpoint the velocity setpoint of the wrist (0 - 1023)
+         * pos_wrist the position setpoint of the wrist (250 - 762)
+         * vel_setpoint the velocity setpoint of the wrist (0 - 1023)
          */
         void SetWrist(int pos_wrist, int vel);
         
         /**
          * Sets the position and velocity of the claw
-         * @param pos_claw the position setpoint of the claw (220 - 610)
-         * @param vel_setpoint the velocity setpoint of the claw (0 - 1023)
+         * pos_claw the position setpoint of the claw (220 - 610)
+         * vel_setpoint the velocity setpoint of the claw (0 - 1023)
          */
         void SetClaw(int pos_claw, int vel);
 
         /**
          * Sets the arm pose
-         * @param pose the enum of the arm position wanted
+         * pose the enum of the arm position wanted
          */
         void SetPose(ArmPose pose);
        
@@ -98,7 +98,7 @@ class Arm {
         int pose_grabbing[4] = {650, 480, 250, 540};
         
         /**
-         * Sets the arm to the deafult startup pose
+         * Sets the arm to the default startup pose
          */
         void SetDefaultPose();
         

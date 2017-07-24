@@ -5,10 +5,18 @@
 #include "Controls.h"
 #include "SerialHandler.h"
 
+/** 
+ * This class controls the current behavior of the robot
+ * through the ZigbController SDK.
+ */
 class BehaviorController {
 
     public:
 
+        /**
+         * Enumeration for the current behavioral
+         * state of the robot.
+         */
         enum class ControllerState {
             WALK_FORWARD,
             WALK_BACKWARD,
@@ -23,10 +31,17 @@ class BehaviorController {
 
         };
 
-
+        /**
+         * Constructor for BehaviorController:
+         * Gets the instance of zigb controller from
+         * SerialHandler.
+         */
         BehaviorController(SerialHandler* serialHandler);
         virtual ~BehaviorController();
-
+        
+        /**
+         * Changes the state of the robot
+         */
         void ChangeState(ControllerState state);
 
 
