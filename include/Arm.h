@@ -57,26 +57,35 @@ class Arm {
 
         /**
          * Sets the position and velocity of the shoulder
+         * @param pos_shoulder the position setpoint of the shoulder (150 - 800)
+         * @param vel_setpoint the velocity setpoint of the shoulder(0 - 1023)
          */
         void SetShoulder(int pos_shoulder, int vel);
         
         /**
          * Sets the position and velocity of the elbow
+         * @param pos_elbow the position setpoint of the elbow (350 - 1023)
+         * @param vel_setpoint the velocity setpoint of the elbow (0 - 1023)
          */
         void SetElbow(int pos_elbow, int vel);
         
         /**
          * Sets the position and velocity of the wrist
+         * @param pos_wrist the position setpoint of the wrist (250 - 762)
+         * @param vel_setpoint the velocity setpoint of the wrist (0 - 1023)
          */
         void SetWrist(int pos_wrist, int vel);
         
         /**
          * Sets the position and velocity of the claw
+         * @param pos_claw the position setpoint of the claw (220 - 610)
+         * @param vel_setpoint the velocity setpoint of the claw (0 - 1023)
          */
         void SetClaw(int pos_claw, int vel);
 
         /**
          * Sets the arm pose
+         * @param pose the enum of the arm position wanted
          */
         void SetPose(ArmPose pose);
        
