@@ -23,7 +23,7 @@ class Humanoid {
 
         void UseKeyboard();
 
-        void UpdateState(int xReactionTolerance, int yReactionTolerance, int areaTolerance);
+        void UpdateState(float xReactionTolerance, float yReactionTolerance, int areaTolerance);
         
         void GrabVerticalCup();
         

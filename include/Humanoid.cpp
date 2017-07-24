@@ -20,36 +20,41 @@ void Humanoid::UseKeyboard(){
     keyboardController->RunInput();
 }
         
-void Humanoid::UpdateState(int xReactionTolerance, int yReactionTolerance, int areaTolerance) {
+void Humanoid::UpdateState(float xReactionTolerance, float yReactionTolerance, int areaTolerance) {
 
     detectnetController->SortBBArrayByTargetDistance();
-    float xError = detectnetController->GetErrorXOfTargetBB();
+    float xErrorFromCenter = detectnetController->GetErrorXOfTargetBB(0.0);
+    float xError = detectnetController->GetErrorXOfTargetBB((1.0/4.0) * detectnetController->GetCameraWidth());
     float yError = detectnetController->GetErrorYOfTargetBB();
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
+    
+    printf("XERROR: %f \nYERROR: %f \n",xErrorFromCenter, yError);
+    printf("XTOLERANCE: %f\nYTOLERANCE: %f\n",xReactionTolerance,yReactionTolerance);
      
     if(!seenCup && detectnetController->bbArraySorted.size() > 0){ //if orientation has not been determined and a cup is seen 
-        if(xError >= xReactionTolerance) {
+        if(xErrorFromCenter >= xReactionTolerance) {
             printf("FINDING CUP TURNING RIGHT\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
-        } else if(xError <= (xReactionTolerance)*-1.0) {
+        } else if(xErrorFromCenter <= (xReactionTolerance)*-1.0) {
             printf("FINDING CUP TURNING LEFT\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
-        } else if(yError <= yReactionTolerance) {
+        } else if(yError <= yReactionTolerance * -1.0) {
             printf("FINDING CUP WALKING FORWARD\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-        } else if(yError >= yReactionTolerance * -1.0) {
+        } else if(yError >= yReactionTolerance) {
             printf("FINDING CUPWALKING BACKWARD\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         }
         else {
+            printf("SEENCUP = TRUE!!!!!!!!!!!!!!");
             cupOrientation = detectnetController->GetCupOrientation(); 
             seenCup = true;
         }
     }
     else if(bbArea == -1) { //else if no cup is seeen
-        if(grab && (cupOrientation == DetectNetController::CupOrientation::VERTICAL)){
+        if(seenCup && grab && (cupOrientation == DetectNetController::CupOrientation::VERTICAL)){
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
@@ -60,7 +65,7 @@ void Humanoid::UpdateState(int xReactionTolerance, int yReactionTolerance, int a
             grab = false; 
             seenCup = false;
         }
-        if(grab && (cupOrientation == DetectNetController::CupOrientation::HORIZONTAL)){
+        if(seenCup && grab && (cupOrientation == DetectNetController::CupOrientation::HORIZONTAL)){
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
@@ -90,24 +95,27 @@ void Humanoid::UpdateState(int xReactionTolerance, int yReactionTolerance, int a
         behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     } 
 
-    if(detectnetController->bbArraySorted.size() < 1){
-        grab = false; 
-        printf("GRAB: NO CUP\n");
+    if(seenCup) {
+	    if(detectnetController->bbArraySorted.size() < 1){
+		grab = false; 
+		printf("GRAB: NO CUP\n");
+	    }
+	    else if( detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
+		grab = true; 
+		printf("GRAB: TRUE\n");
+		printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+		printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+	    }
+	    else {
+		grab = false; 
+		printf("GRAB: TOO HIGH\n");
+		printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
+		printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+		printf("CENTER X of BB: %f\n", detectnetController->GetCenterXFromBB(detectnetController->bbArraySorted[0]) );
+		std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;
+	    }
     }
-    else if( detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
-        grab = true; 
-        printf("GRAB: TRUE\n");
-        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
-        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
-    }
-    else {
-        grab = false; 
-        printf("GRAB: TOO HIGH\n");
-        printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
-        printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
-        printf("CENTER X of BB: %f\n", detectnetController->GetCenterXFromBB(detectnetController->bbArraySorted[0]) );
-        std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;
-    }
+    
     sleep(1);
 
 }

@@ -106,32 +106,33 @@ bool DetectNetController::ReadStopSignal(){
 
 float DetectNetController::GetCenterXFromBB(std::array<float, 5> bb) {
     if(!bb.empty()){
-        printf("GetCenterXFromBB: bb[0] = %0.0f, bb[2] = %0.0f \n", bb[0], bb[2]);
+    	printf("CenterXFromBB: %0.0f \n", (bb[0] + bb[2]) / 2.0);
         return (bb[0] + bb[2]) / 2.0;
     }
-    else return -1;
+    else return -1.0;
 }
 
 float DetectNetController::GetCenterYFromBB(std::array<float, 5> bb) {
     if(!bb.empty()){ 
-        printf("GetCenterXFromBB: bb[1] = %0.0f, bb[3] = %0.0f \n", bb[1], bb[3]);
-        return (bb[1] + bb[3]) / 2.0;   
+    	printf("CenterYFromBB: %0.0f \n", (bb[1] + bb[3]) / 2.0);
+	return (bb[1] + bb[3]) / 2.0;   
     }
-    else return -1;
+    else return -1.0;
 }
 
-float DetectNetController::GetErrorXOfTargetBB() {
-   const float offset = (1.0/4.0) * (GetCameraWidth());
+float DetectNetController::GetErrorXOfTargetBB(float offset) {
    if(bbArraySorted.size() < 1) return 0.0;
    float cX = GetCenterXFromBB(bbArraySorted[0]);
-   if(cX == -1) return 0.0;
-   return cX - GetCameraCenterX() - offset; 
+   if(cX == -1.0) return 0.0;
+   printf("GETERRORXofTargetBB: %0.0f \n", cX - GetCameraCenterX() - offset);
+   return (cX - GetCameraCenterX() - offset); 
 }
 
 float DetectNetController::GetErrorYOfTargetBB() {
    if(bbArraySorted.size() < 1) return 0.0;
    float cY = GetCenterYFromBB(bbArraySorted[0]);
-   if(cY == -1) return 0.0;
+   if(cY == -1.0) return 0.0;
+   printf("GETERRORYofTargetBB: %0.0f \n", cY - GetCameraCenterY());
    return cY - GetCameraCenterY(); 
 }
 

@@ -7,7 +7,8 @@ SerialHandler::SerialHandler() {
 }
 
 SerialHandler::~SerialHandler() {
-
+    zigb->CloseZigbee();
+    portHandler->closePort();
 }
 
 int SerialHandler::OpenZigbPort() {
