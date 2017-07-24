@@ -23,7 +23,7 @@ class Humanoid {
 
         void UseKeyboard();
 
-        void UpdateState(int xReactionTolerance, int areaTolerance);
+        void UpdateState(int xReactionTolerance, int yReactionTolerance, int areaTolerance);
         
         void GrabVerticalCup();
         
@@ -35,6 +35,10 @@ class Humanoid {
         ZigbController* zigb;
         KeyboardController* keyboardController;
         bool grab = false;
+        bool seenCup = false;
+        DetectNetController::CupOrientation cupOrientation = DetectNetController::CupOrientation::UNKNOWN;
+
 };
+
 
 #endif // HUMANOID_H_

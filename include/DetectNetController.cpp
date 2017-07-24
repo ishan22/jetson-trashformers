@@ -171,9 +171,9 @@ float* DetectNetController::GetConfCPU(){
 
 DetectNetController::CupOrientation DetectNetController::GetCupOrientation(){
     std::array<float, 5> targetCup = GetTargetBB();
-    if(targetCup.empty()) return CupOrientation::UKNOWN;
+    if(targetCup.empty()) return CupOrientation::UNKNOWN;
     float width = targetCup[2] - targetCup[0];
     float height = targetCup[3] - targetCup[1];
-    if(width > height) return CupOrientation::HORIZONTAL;
+    if((width / height) > 1.5) return CupOrientation::HORIZONTAL;
     return CupOrientation::VERTICAL;
 }

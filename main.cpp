@@ -47,9 +47,10 @@ int main (int argc, char** argv){
     //Define acceptable distance tolerance where robot will no longer react and try to turn
     int xReactionTolerance = 0.10 * humanoid->detectnetController->GetCameraWidth();
     int areaTolerance = 2.00 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
+    int yReactionTolerance = 0.10 * humanoid->detectnetController->GetCameraHeight();
 
     while(!humanoid->detectnetController->ReadStopSignal()){
-        humanoid->UpdateState(xReactionTolerance, areaTolerance);
+        humanoid->UpdateState(xReactionTolerance, yReactionTolerance, areaTolerance);
     }
 
     humanoid->detectnetController->JoinDetectThread();

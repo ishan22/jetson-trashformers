@@ -49,7 +49,7 @@ class DetectNetController {
         enum class CupOrientation {
                 VERTICAL=0,
                 HORIZONTAL=1,
-                UKNOWN=2
+                UNKNOWN=2
         };
 
         DetectNetController::CupOrientation GetCupOrientation();

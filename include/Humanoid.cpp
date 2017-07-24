@@ -3,7 +3,6 @@
 #define DEFAULT_ZIGBEE_DEVICEINDEX 0
 
 Humanoid::Humanoid(int camPort, std::string model) { //CONSTRUCTOR
-
     serialHandler = new SerialHandler();
     zigb = serialHandler->GetZigbController();
     behaviorController = new BehaviorController(serialHandler);    
@@ -21,14 +20,36 @@ void Humanoid::UseKeyboard(){
     keyboardController->RunInput();
 }
         
-void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
+void Humanoid::UpdateState(int xReactionTolerance, int yReactionTolerance, int areaTolerance) {
 
     detectnetController->SortBBArrayByTargetDistance();
     float xError = detectnetController->GetErrorXOfTargetBB();
+    float yError = detectnetController->GetErrorYOfTargetBB();
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
-
-    if(bbArea == -1) {
-        if(grab){
+     
+    if(!seenCup && detectnetController->bbArraySorted.size() > 0){ //if orientation has not been determined and a cup is seen 
+        if(xError >= xReactionTolerance) {
+            printf("FINDING CUP TURNING RIGHT\n");
+            behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
+        } else if(xError <= (xReactionTolerance)*-1.0) {
+            printf("FINDING CUP TURNING LEFT\n");
+            behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+        } else if(yError <= yReactionTolerance) {
+            printf("FINDING CUP WALKING FORWARD\n");
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+        } else if(yError >= yReactionTolerance * -1.0) {
+            printf("FINDING CUPWALKING BACKWARD\n");
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+        }
+        else {
+            cupOrientation = detectnetController->GetCupOrientation(); 
+            seenCup = true;
+        }
+    }
+    else if(bbArea == -1) { //else if no cup is seeen
+        if(grab && (cupOrientation == DetectNetController::CupOrientation::VERTICAL)){
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
@@ -37,6 +58,18 @@ void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
             GrabVerticalCup();
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             grab = false; 
+            seenCup = false;
+        }
+        if(grab && (cupOrientation == DetectNetController::CupOrientation::HORIZONTAL)){
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+            printf("BEND DOWN\n"); 
+            sleep(1);
+            GrabVerticalCup();
+            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+            grab = false; 
+            seenCup = false;
         }
         else {
            printf("STOP\n"); 
