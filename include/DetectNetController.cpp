@@ -175,6 +175,7 @@ DetectNetController::CupOrientation DetectNetController::GetCupOrientation(){
     if(targetCup.empty()) return CupOrientation::UNKNOWN;
     float width = targetCup[2] - targetCup[0];
     float height = targetCup[3] - targetCup[1];
-    if((width / height) > 1.5) return CupOrientation::HORIZONTAL;
+    printf("Width: %f\n Height: %f\n RATIO W:H: %f\n", width, height, width/height);
+    if((width / height) > 1.1) return CupOrientation::HORIZONTAL;
     return CupOrientation::VERTICAL;
 }

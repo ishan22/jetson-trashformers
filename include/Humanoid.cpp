@@ -20,45 +20,54 @@ void Humanoid::UseKeyboard(){
     keyboardController->RunInput();
 }
         
-void Humanoid::UpdateState(float xReactionTolerance, float yReactionTolerance, int areaTolerance) {
-
+void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
     detectnetController->SortBBArrayByTargetDistance();
     float xErrorFromCenter = detectnetController->GetErrorXOfTargetBB(0.0);
     float xError = detectnetController->GetErrorXOfTargetBB((1.0/4.0) * detectnetController->GetCameraWidth());
     float yError = detectnetController->GetErrorYOfTargetBB();
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
-    
+        
+    float xCenterTolerance = 0.1 * detectnetController->GetCameraWidth();
+    float yCenterTolerance = 0.1 * detectnetController->GetCameraHeight();
+   
     printf("XERROR: %f \nYERROR: %f \n",xErrorFromCenter, yError);
-    printf("XTOLERANCE: %f\nYTOLERANCE: %f\n",xReactionTolerance,yReactionTolerance);
+    printf("XTOLERANCE: %f\nYTOLERANCE: %f\n", xCenterTolerance, yCenterTolerance);
      
     if(!seenCup && detectnetController->bbArraySorted.size() > 0){ //if orientation has not been determined and a cup is seen 
-        if(xErrorFromCenter >= xReactionTolerance) {
+        if(xErrorFromCenter >= xCenterTolerance) {
             printf("FINDING CUP TURNING RIGHT\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
-        } else if(xErrorFromCenter <= (xReactionTolerance)*-1.0) {
+        } else if(xErrorFromCenter <= (xCenterTolerance)*-1.0) {
             printf("FINDING CUP TURNING LEFT\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
-        } else if(yError <= yReactionTolerance * -1.0) {
+        } else if(yError <= yCenterTolerance * -1.0) {
             printf("FINDING CUP WALKING FORWARD\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-        } else if(yError >= yReactionTolerance) {
+        } else if(yError >= yCenterTolerance) {
             printf("FINDING CUPWALKING BACKWARD\n");
-            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_BACKWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         }
         else {
-            printf("SEENCUP = TRUE!!!!!!!!!!!!!!");
+            printf("SEENCUP = TRUE!!!!!!!!!!!!!!\n");
+            sleep(3);
             cupOrientation = detectnetController->GetCupOrientation(); 
+            if(cupOrientation == DetectNetController::CupOrientation::VERTICAL){
+                printf("CUP ORIENTATION: VERTICAL\n");
+            }
+            else if(cupOrientation == DetectNetController::CupOrientation::HORIZONTAL){
+                printf("CUP ORIENTATION: HORIZONTAL\n");
+            }
             seenCup = true;
         }
     }
     else if(bbArea == -1) { //else if no cup is seeen
         if(seenCup && grab && (cupOrientation == DetectNetController::CupOrientation::VERTICAL)){
+            printf("RUNNING: VERTICAL\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
-            printf("BEND DOWN\n"); 
             sleep(1);
             GrabVerticalCup();
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
@@ -66,6 +75,7 @@ void Humanoid::UpdateState(float xReactionTolerance, float yReactionTolerance, i
             seenCup = false;
         }
         if(seenCup && grab && (cupOrientation == DetectNetController::CupOrientation::HORIZONTAL)){
+            printf("RUNNING: HORIZONTAL\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
@@ -116,7 +126,7 @@ void Humanoid::UpdateState(float xReactionTolerance, float yReactionTolerance, i
 	    }
     }
     
-    sleep(1);
+    sleep(2);
 
 }
 

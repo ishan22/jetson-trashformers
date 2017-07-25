@@ -23,7 +23,7 @@ class Humanoid {
 
         void UseKeyboard();
 
-        void UpdateState(float xReactionTolerance, float yReactionTolerance, int areaTolerance);
+        void UpdateState(float xReactionTolerance, int areaTolerance);
         
         void GrabVerticalCup();
         
@@ -37,6 +37,7 @@ class Humanoid {
         bool grab = false;
         bool seenCup = false;
         DetectNetController::CupOrientation cupOrientation = DetectNetController::CupOrientation::UNKNOWN;
+        DetectNetController::CupOrientation tmpCupOrientation = DetectNetController::CupOrientation::UNKNOWN;
 
 };
 

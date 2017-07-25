@@ -50,7 +50,7 @@ int main (int argc, char** argv){
     int yReactionTolerance = 0.15 * humanoid->detectnetController->GetCameraHeight();
 
     while(!humanoid->detectnetController->ReadStopSignal()){
-        humanoid->UpdateState(xReactionTolerance, yReactionTolerance, areaTolerance);
+        humanoid->UpdateState(xReactionTolerance, areaTolerance);
     }
 
     humanoid->detectnetController->JoinDetectThread();
