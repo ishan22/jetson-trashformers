@@ -26,16 +26,21 @@ class Humanoid {
         Humanoid(int camPort, std::string model);
         virtual ~Humanoid();
 
-        double GetCupCenterY();
-        double GetCupCenterX();
-
         /**
          * Runs a while loop in keyboardController to send zigbee commands via keyboard input
          */
         void UseKeyboard();
 
+        /**
+         * Updates the current state of the robot based on the 
+         * current position of the cup bounding box.
+         */
         void UpdateState(int xReactionTolerance, int areaTolerance);
-        
+       
+        /**
+         * Routine to grab a cup that is sitting vertically
+         * on the ground
+         */ 
         void GrabVerticalCup();
         
         SerialHandler* serialHandler;
@@ -43,7 +48,6 @@ class Humanoid {
         DetectNetController* detectnetController;
         BehaviorController* behaviorController; 
     private:
-        ZigbController* zigb;
         KeyboardController* keyboardController;
         bool grab = false;
 };
