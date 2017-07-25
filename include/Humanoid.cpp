@@ -22,8 +22,10 @@ void Humanoid::UseKeyboard(){
 }
         
 void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
-
+    
+    mtx.lock();
     detectnetController->SortBBArrayByTargetDistance();
+    mtx.unlock();
     float xError = detectnetController->GetErrorXOfTargetBB();
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
 

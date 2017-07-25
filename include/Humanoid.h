@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <mutex>
 
 #include "ZigbController.h"
 #include "KeyboardController.h"
@@ -35,6 +36,7 @@ class Humanoid {
         ZigbController* zigb;
         KeyboardController* keyboardController;
         bool grab = false;
+        std::mutex mtx;
 };
 
 #endif // HUMANOID_H_
