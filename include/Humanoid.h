@@ -32,6 +32,10 @@ class Humanoid {
         DetectNetController* detectnetController;
         BehaviorController* behaviorController; 
     private:
+        int sleepTimeOrientation = 2;
+        int sleepTimeGrab = 1;
+        
+        int sleepTime = 1;
         ZigbController* zigb;
         KeyboardController* keyboardController;
         bool grab = false;
