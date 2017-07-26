@@ -135,9 +135,21 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
 }
 
 void Humanoid::GrabVerticalCup() { 
-    arm->SetPose(Arm::ArmPose::READY);
+    arm->SetPose(Arm::ArmPose::VERTICAL_READY);
     sleep(1);
-    arm->SetPose(Arm::ArmPose::GRABBING);
+    behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::VERTICAL_GRABBING);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::GRAB);
+    sleep(2);
+    arm->SetPose(Arm::ArmPose::STORE);
+}
+
+void Humanoid::GrabHorizontalCup() { 
+    arm->SetPose(Arm::ArmPose::DEFAULT);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::HORIZONTAL_GRABBING);
     sleep(1);
     arm->SetPose(Arm::ArmPose::GRAB);
     sleep(2);

@@ -26,6 +26,7 @@ class Humanoid {
         void UpdateState(float xReactionTolerance, int areaTolerance);
         
         void GrabVerticalCup();
+        void GrabHorizontalCup();
         
         SerialHandler* serialHandler;
         Arm* arm;

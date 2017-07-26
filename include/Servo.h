@@ -19,6 +19,8 @@
 #define TORQUE_ENABLE 1
 #define TORQUE_DISABLE 0
 
+#define TORQUE_SAFE 340
+
 class Servo {
     public:				
         Servo(int dxl_id, dynamixel::PortHandler* portHandler);
@@ -31,12 +33,15 @@ class Servo {
 
         int SetVelocitySetpoint(uint16_t setpoint);		
         void SetSafeTorque();
+        void SetTorque(int torque);
     private: 
         int m_dxl_id;
         std::string* m_devicename;
         int dxl_comm_result = COMM_TX_FAIL;
         uint8_t dxl_error = 0;
         uint16_t dxl_present_position;
+
+        int m_torque = TORQUE_SAFE;
 
         dynamixel::PortHandler* m_portHandler;
         dynamixel::PacketHandler* packetHandler;

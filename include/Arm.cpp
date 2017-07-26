@@ -66,21 +66,35 @@ void Arm::SetDefaultPose() {
     Set(pose_default[0], pose_default[1], pose_default[2], pose_default[3], 200);
 }
 
-void Arm::SetReadyPose() {
-    Set(pose_ready[0], pose_ready[1], pose_ready[2], pose_ready[3], 200);   
+void Arm::SetVerticalReadyPose() {
+    Set(pose_vertical_ready[0], pose_vertical_ready[1], pose_vertical_ready[2], pose_vertical_ready[3], 200);   
 }
 
-void Arm::SetGrabbingPose() {
-    Set(pose_grabbing[0], pose_grabbing[1], pose_ready[2], pose_ready[3], 200);
+void Arm::SetVerticalGrabbingPose() {
+    Set(pose_vertical_grabbing[0], pose_vertical_grabbing[1], pose_vertical_ready[2], pose_vertical_ready[3], 200);
+}
+
+void Arm::SetHorizontalReadyPose() {
+    Set(pose_horizontal_ready[0], pose_horizontal_ready[1], pose_horizontal_ready[2], pose_horizontal_ready[3], 200);   
+}
+
+void Arm::SetHorizontalGrabbingPose() {
+    Set(pose_horizontal_grabbing[0], pose_horizontal_grabbing[1], pose_horizontal_grabbing[2], pose_horizontal_grabbing[3], 200);
 }
 
 void Arm::GrabCup() {
-    SetWrist(pose_grabbing[2], 200);
-    SetClaw(pose_grabbing[3], 800);
+    SetWrist(pose_vertical_grabbing[2], 200);
+    SetClaw(pose_vertical_grabbing[3], 800);
 }
 
 void Arm::SetStorePose() {
     Set(pose_store[0], pose_store[1], pose_store[2], pose_store[3], 200);
+}
+
+void Arm::SetBendPose() {
+    wrist->SetTorque(800);
+    Set(pose_bend[0], pose_bend[1], pose_bend[2], pose_bend[3], 800);
+    wrist->SetTorque(TORQUE_SAFE);
 }
 
 void Arm::SetPose(ArmPose pose) {
@@ -89,17 +103,26 @@ void Arm::SetPose(ArmPose pose) {
         case ArmPose::DEFAULT:
             SetDefaultPose();
             break;
-        case ArmPose::READY:
-            SetReadyPose();
+        case ArmPose::VERTICAL_READY:
+            SetVerticalReadyPose();
             break;
-        case ArmPose::GRABBING:
-            SetGrabbingPose();
+        case ArmPose::VERTICAL_GRABBING:
+            SetVerticalGrabbingPose();
+            break;
+        case ArmPose::HORIZONTAL_READY:
+            SetHorizontalReadyPose();
+            break;
+        case ArmPose::HORIZONTAL_GRABBING:
+            SetHorizontalGrabbingPose();
             break;
         case ArmPose::GRAB:
             GrabCup();
             break;
         case ArmPose::STORE:
             SetStorePose();
+            break;
+        case ArmPose::BEND:
+            SetBendPose();
             break;
     }
 }
