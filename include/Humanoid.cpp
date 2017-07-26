@@ -114,21 +114,21 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
     if(seenCup) {
 	    if(detectnetController->bbArraySorted.size() < 1){
 		grab = false; 
-		printf("GRAB: NO CUP\n");
+		//printf("GRAB: NO CUP\n");
 	    }
 	    else if( detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
 		grab = true; 
-		printf("GRAB: TRUE\n");
+   		/*printf("GRAB: TRUE\n");
 		printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
-		printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
+		printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );*/
 	    }
 	    else {
 		grab = false; 
-		printf("GRAB: TOO HIGH\n");
+		/*printf("GRAB: TOO HIGH\n");
 		printf("CENTER Y of BB: %f\n", detectnetController->GetCenterYFromBB(detectnetController->bbArraySorted[0]) );
 		printf("image threshold: %f\n", ((2.0/3.0) * detectnetController->GetCameraHeight()) );
 		printf("CENTER X of BB: %f\n", detectnetController->GetCenterXFromBB(detectnetController->bbArraySorted[0]) );
-		std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;
+		std::cout << (detectnetController->bbArraySorted[0])[0] << std::endl;*/
 	    }
     }
     
