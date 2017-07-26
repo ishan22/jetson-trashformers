@@ -28,7 +28,7 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
         
     float xCenterTolerance = 0.1 * detectnetController->GetCameraWidth();
-    float yCenterTolerance = 0.1 * detectnetController->GetCameraHeight();
+    float yCenterTolerance = 0.05 * detectnetController->GetCameraHeight();
    
     printf("XERROR: %f \nYERROR: %f \n",xErrorFromCenter, yError);
     printf("XTOLERANCE: %f\nYTOLERANCE: %f\n", xCenterTolerance, yCenterTolerance);
