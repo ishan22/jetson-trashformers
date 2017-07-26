@@ -28,15 +28,21 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
     detectnetController->SortBBArrayByTargetDistance();
     float xErrorFromCenter = detectnetController->GetErrorXOfTargetBB(0.0);
     float xError = detectnetController->GetErrorXOfTargetBB((1.0/4.0) * detectnetController->GetCameraWidth());
-    float yError = detectnetController->GetErrorYOfTargetBB();
+    float topOfBB; 
+    if(detectnetController->bbArraySorted.size() > 0){
+        topOfBB = detectnetController->bbArraySorted[0][1];
+    } else {
+        topOfBB = -1.0;
+    }
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
         
     float xCenterTolerance = 0.075 * detectnetController->GetCameraWidth();
-    float yCenterTolerance = 0.05 * detectnetController->GetCameraHeight();
+    float yTopThreshold = (1.0/5.0) * detectnetController->GetCameraHeight();
    
-    printf("XERROR: %f \nYERROR: %f \n",xErrorFromCenter, yError);
-    printf("XTOLERANCE: %f\nYTOLERANCE: %f\n", xCenterTolerance, yCenterTolerance);
+    //printf("XERROR: %f \nYERROR: %f \n",xErrorFromCenter, yError);
+    //printf("XTOLERANCE: %f\nYTOLERANCE: %f\n", xCenterTolerance, yCenterTolerance);
      
+    printf("topOfBB: %f \n, yTopThreshold: %f\n",topOfBB, yTopThreshold);
     if(!seenCup && detectnetController->bbArraySorted.size() > 0){ //if orientation has not been determined and a cup is seen 
         sleepTime = sleepTimeOrientation;
         if(xErrorFromCenter >= xCenterTolerance) {
@@ -45,24 +51,13 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
         } else if(xErrorFromCenter <= (xCenterTolerance)*-1.0) {
             printf("FINDING CUP TURNING LEFT\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
-        } else if(yError <= yCenterTolerance * -1.0) {
-            printf("FINDING CUP WALKING FORWARD\n");
-            behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_LEFT);
-            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-        } else if(yError >= yCenterTolerance) {
+        } else if(topOfBB >= yTopThreshold) {
             printf("FINDING CUPWALKING BACKWARD\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::WALK_BACKWARD);
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
         }
         else {
             printf("SEENCUP = TRUE!!!!!!!!!!!!!!\n");
-            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_BACKWARD);
-            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-            sleep(1);
-            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_BACKWARD);
-            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_BACKWARD);
-            behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             sleep(3);
             cupOrientation = detectnetController->GetCupOrientation(); 
             if(cupOrientation == DetectNetController::CupOrientation::VERTICAL){
