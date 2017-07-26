@@ -83,9 +83,19 @@ void Humanoid::UpdateState(float xReactionTolerance, int areaTolerance) {
         if(seenCup && grab && (cupOrientation == DetectNetController::CupOrientation::HORIZONTAL)){
             printf("RUNNING: HORIZONTAL\n");
             behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
-            printf("BEND DOWN\n"); 
             sleep(1);
-            GrabVerticalCup();
+            behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+            sleep(1);
+            behaviorController->ChangeState(BehaviorController::ControllerState::WALK_FORWARD);
+            sleep(1);
+            printf("BEND DOWN\n"); 
+            arm->SetPose(Arm::ArmPose::HORIZONTAL_READY);
+            behaviorController->ChangeState(BehaviorController::ControllerState::BEND_DOWN);    
+            sleep(1);
+            arm->SetPose(Arm::ArmPose::HORIZONTAL_GRABBING);
+            sleep(1);
+            arm->SetPose(Arm::ArmPose::GRAB);
+            //GrabHorizontalCup();
             behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
             grab = false; 
             seenCup = false;
