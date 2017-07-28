@@ -24,14 +24,13 @@ void Humanoid::UseKeyboard(){
 
 void Humanoid::UpdateState() {
     
+    //Tell detectNet to read one image
     detectnetController->SetDetectNetLoopLock(true);
     while(detectnetController->GetDetectNetLoopLock()){}
     
+    //SortArray
     detectnetController->SortBBArrayByTargetDistance();
    
-    float xError = detectnetController->GetErrorXOfTargetBB((1.0/4.0) * detectnetController->GetCameraWidth());
-    float bbArea = detectnetController->GetAreaOfTargetBB(); 
-    
     switch(humanoidState) {
         default:
         case Humanoid::HumanoidState::SEARCHING:
@@ -50,20 +49,23 @@ void Humanoid::UpdateState() {
 
 }
 
-void Humanoid::Positioning(){
-    Positioning(0.0);
+void Humanoid::Position(){
+    Position(0.0);
 }
 
-void Humanoid::Positioning(float xOffset){
+void Humanoid::Position(float xOffset){
+    float xReactionTolerance = 0.10 * detectnetController->GetCameraWidth(); 
     float xError = detectnetController->GetErrorXOfTargetBB(xOffset);
 
-    if(!detectnetController->GetTargetBB(targetClassID).size() > 0){
-        if(shouldGrab){
+    if(detectnetController->GetTargetBB(targetClassID).size() == 0){ //NO BB FOUND
+        if(lowFrame && targetClassID == DetectNetController::ClassID::TRASHCAN) { //class ID of trashcan
             humanoidState = HumanoidState::GRABBING;
-            shouldGrab = false; //reset for next time this function is called
-        }
-    }
-    else if(xError >= xReactionTolerance) {
+            lowFrame = false;
+        } else if(lowFrame && targetClassID == DetectNetController::ClassID::CUP) {
+            humanoidState = HumanoidState::RELEASING;
+            lowFrame = false;
+        } 
+    } else if(xError >= xReactionTolerance) {
         printf("TURNING RIGHT\n");
         behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
     } else if(xError <= (xReactionTolerance)*-1.0){
@@ -75,20 +77,14 @@ void Humanoid::Positioning(float xOffset){
         behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     } 
 
-    if(!detectnetController->GetTargetBB(targetClassID).size() > 0){
-        shouldGrab = false; 
-    }
-    else if( detectnetController->GetCenterYFromBB(detectnetController->GetTargetBB(targetClassID)) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
-        printf("CLASS ID: %i\n", (int)classID);
-        if(classID == DetectNetController::ClassID::TRASHCAN && searchForTrashCan) { //class ID of trashcan
-            searchForTrashCan = false;
-            release = true;
-        } else if(classID == DetectNetController::ClassID::CUP && !searchForTrashCan) {
-            shouldGrab = true; 
-        } 
+    if(detectnetController->GetTargetBB(targetClassID).size() == 0){
+        //Don't change variables
+    } else if( detectnetController->GetCenterYFromBB(detectnetController->GetTargetBB(targetClassID)) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
+        printf("CLASS ID: %i\n", (int)targetClassID);
+        lowFrame = true;
     }
     else {
-        shouldGrab = false; 
+        lowFrame = false; 
     }
     
 }
