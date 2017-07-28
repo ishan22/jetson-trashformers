@@ -23,7 +23,7 @@ class Humanoid {
             POSITIONING,
             GRABBING,
             RELEASING
-        }
+        };
 
         double GetCupCenterY();
         double GetCupCenterX();
@@ -53,7 +53,9 @@ class Humanoid {
         bool release = false;
         
         HumanoidState humanoidState;
-        DetectNetController::ClassID classID;  
+        DetectNetController::ClassID targetClassID = DetectNetController::ClassID::UNKNOWN;  
+        void Positioning();
+        void Positioning(float xOffset);
 };
 
 #endif // HUMANOID_H_

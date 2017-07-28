@@ -128,12 +128,15 @@ float DetectNetController::GetCenterYFromBB(std::array<float, 5> bb) {
     else return -1;
 }
 
-float DetectNetController::GetErrorXOfTargetBB() {
-   const float offset = (1.0/4.0) * (GetCameraWidth());
+float DetectNetController::GetErrorXOfTargetBB(float offset) {
    if(bbArraySorted.size() < 1) return 0.0;
    float cX = GetCenterXFromBB(bbArraySorted[0]);
    if(cX == -1) return 0.0;
    return cX - GetCameraCenterX() - offset; 
+}
+
+float DetectNetController::GetErrorXOfTargetBB(){
+    return GetErrorXOfTargetBB(0.0);
 }
 
 float DetectNetController::GetErrorYOfTargetBB() {
