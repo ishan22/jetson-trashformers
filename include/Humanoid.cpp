@@ -30,7 +30,6 @@ void Humanoid::UpdateState() {
     
     //SortArray
     detectnetController->SortBBArrayByTargetDistance();
-   
 
     switch(humanoidState) {
         default:
@@ -109,6 +108,10 @@ void Humanoid::Position(float xOffset){
             humanoidState = HumanoidState::GRABBING;
             lowFrame = false;
         } 
+        else {
+            humanoidState = HumanoidState::SEARCHING;
+            lowFrame = false;
+        }
     } else if(xError >= xReactionTolerance) {
         printf("TURNING RIGHT\n");
         behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
