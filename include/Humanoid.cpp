@@ -70,7 +70,7 @@ void Humanoid::Grab() {
     GrabVerticalCup();
     behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     humanoidState = Humanoid::HumanoidState::SEARCHING;
-    classID = DetectNetController::ClassID::TRASHCAN;
+    targetClassID = DetectNetController::ClassID::TRASHCAN;
 }
 
 void Humanoid::GrabVerticalCup() { 
@@ -90,7 +90,7 @@ void Humanoid::ReleaseCup() {
     sleep(1);
     arm->SetPose(Arm::ArmPose::DEFAULT);
     humanoidState = Humanoid::HumanoidState::RELEASING;
-    classID = DetectNetController::ClassID::CUP;
+    targetClassID = DetectNetController::ClassID::CUP;
 }
 
 void Humanoid::Position(){
