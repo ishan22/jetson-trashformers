@@ -57,6 +57,7 @@ class Humanoid {
         bool Searching();
         void Position();
         void Position(float xOffset);
+        void Turn();
        
 };
 

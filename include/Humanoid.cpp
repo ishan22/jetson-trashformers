@@ -83,11 +83,14 @@ void Humanoid::GrabVerticalCup() {
 }
 
 void Humanoid::ReleaseCup() {
-    arm->SetPose(Arm::ArmPose::STORE);
-    sleep(1);
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_LEFT);
     arm->SetPose(Arm::ArmPose::RELEASE);
-    sleep(1);
     arm->SetPose(Arm::ArmPose::DEFAULT);
+
+    for(int i=0; i < 4; i++){
+        Turn(1);
+    }
+
     humanoidState = Humanoid::HumanoidState::SEARCHING;
     targetClassID = DetectNetController::ClassID::CUP;
 }
@@ -137,14 +140,18 @@ void Humanoid::Position(float xOffset){
     sleep(1);
     
 }
-        
-bool Humanoid::Searching() {
+
+void Humanoid::Turn(int sleepTime){
     behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_FRONTAL_LEFT);
     behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-    sleep(1);
+    sleep(sleepTime);
     behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_DORSAL_RIGHT);
     behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
-    sleep(1);
+    sleep(sleepTime);
+}
+        
+bool Humanoid::Searching() {
+    Turn(1);
 
     if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){
        return false; 
