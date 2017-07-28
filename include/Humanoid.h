@@ -50,12 +50,16 @@ class Humanoid {
     private:
         ZigbController* zigb;
         KeyboardController* keyboardController;
-        bool shouldGrab = false;
-        bool searchForTrashCan = false;
-        bool release = false;
+        bool lowFrame = false;
         
-        HumanoidState humanoidState;
-        DetectNetController::ClassID classID;  
+        HumanoidState humanoidState = HumanoidState::SEARCHING;
+        DetectNetController::ClassID targetClassID = DetectNetController::ClassID::CUP;  
+        bool Searching();
+        void Position();
+        void Position(float xOffset);
+        void GrabVerticalCup();
+        void ReleaseCup();
+       
 };
 
 #endif // HUMANOID_H_

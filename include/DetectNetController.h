@@ -62,6 +62,7 @@ class DetectNetController {
         
         float GetAreaOfTargetBB();
         float GetErrorXOfTargetBB();
+        float GetErrorXOfTargetBB(float offset);
         float GetErrorYOfTargetBB();
         int GetClassIDFromUnsortedBBNum(int bbNum);
         DetectNetController::ClassID GetClassIDFromSortedBB(int bbNum);

@@ -24,33 +24,41 @@ void Humanoid::UseKeyboard(){
 
 void Humanoid::UpdateState() {
     
+    //Tell detectNet to read one image
     detectnetController->SetDetectNetLoopLock(true);
     while(detectnetController->GetDetectNetLoopLock()){}
     
+    //SortArray
     detectnetController->SortBBArrayByTargetDistance();
    
-    float xError = detectnetController->GetErrorXOfTargetBB();
-    float bbArea = detectnetController->GetAreaOfTargetBB(); 
 
-    
     switch(humanoidState) {
         default:
         case Humanoid::HumanoidState::SEARCHING:
-            //insert here
+            printf("STATE: SEARCHING\n");
+            if(Searching()) {
+                humanoidState = HumanoidState::POSITIONING;
+            }
             break;
         case Humanoid::HumanoidState::POSITIONING:
-            //insert here
+            printf("STATE: POSITIONING\n");
+            if(targetClassID == DetectNetController::ClassID::CUP){
+                Position((1.0/4.0) * detectnetController->GetCameraWidth());
+            } else if(targetClassID == DetectNetController::ClassID::TRASHCAN){
+                Position();
+            }
             break;
         case Humanoid::HumanoidState::GRABBING:
+            printf("STATE: GRABBING\n");
             Grab();
             break;
         case Humanoid::HumanoidState::RELEASING:
+            printf("STATE: RELEASING\n");
             ReleaseCup();
             break;
     }
 
 }
-
 
 
 void Humanoid::Grab() {
@@ -83,6 +91,63 @@ void Humanoid::ReleaseCup() {
     arm->SetPose(Arm::ArmPose::DEFAULT);
     humanoidState = Humanoid::HumanoidState::RELEASING;
     classID = DetectNetController::ClassID::CUP;
+}
+
+void Humanoid::Position(){
+    Position(0.0);
+}
+
+void Humanoid::Position(float xOffset){
+    float xReactionTolerance = 0.10 * detectnetController->GetCameraWidth(); 
+    float xError = detectnetController->GetErrorXOfTargetBB(xOffset);
+
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){ //NO BB IS FOUND
+        if(lowFrame && targetClassID == DetectNetController::ClassID::TRASHCAN) { //class ID of trashcan
+            humanoidState = HumanoidState::RELEASING;
+            lowFrame = false;
+        } else if(lowFrame && targetClassID == DetectNetController::ClassID::CUP) {
+            humanoidState = HumanoidState::GRABBING;
+            lowFrame = false;
+        } 
+    } else if(xError >= xReactionTolerance) {
+        printf("TURNING RIGHT\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_RIGHT);
+    } else if(xError <= (xReactionTolerance)*-1.0){
+        printf("TURNING LEFT\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+    } else {
+        printf("WALKING FORWARD\n");
+        behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_LEFT);
+        behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    } 
+
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){
+        //Don't change variables
+    } else if( detectnetController->GetCenterYFromBB(detectnetController->GetTargetBB(targetClassID)) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
+        printf("CLASS ID: %i\n", (int)targetClassID);
+        lowFrame = true;
+    }
+    else {
+        lowFrame = false; 
+    }
+    
+    sleep(1);
+    
+}
+        
+bool Humanoid::Searching() {
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_FRONTAL_LEFT);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    sleep(1);
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_DORSAL_RIGHT);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    sleep(1);
+
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){
+       return false; 
+    } else {
+       return true;
+    }
 }
 
 /*void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
