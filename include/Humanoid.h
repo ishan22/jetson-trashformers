@@ -34,10 +34,7 @@ class Humanoid {
 
         void UpdateState();
         
-        void GrabVerticalCup();
-        
-        void ReleaseCup();
-        
+ 
         SerialHandler* serialHandler;
         Arm* arm;
         DetectNetController* detectnetController;
@@ -51,9 +48,13 @@ class Humanoid {
         bool lowFrame = false;
         
         HumanoidState humanoidState;
-        DetectNetController::ClassID targetClassID = DetectNetController::ClassID::UNKNOWN;  
+        DetectNetController::ClassID targetClassID = DetectNetController::ClassID::CUP;  
+        bool Searching();
         void Position();
         void Position(float xOffset);
+        void GrabVerticalCup();
+        void ReleaseCup();
+       
 };
 
 #endif // HUMANOID_H_

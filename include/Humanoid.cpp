@@ -34,10 +34,16 @@ void Humanoid::UpdateState() {
     switch(humanoidState) {
         default:
         case Humanoid::HumanoidState::SEARCHING:
-            //insert here
+            if(Searching()) {
+                humanoidState = HumanoidState::POSITIONING;
+            }
             break;
         case Humanoid::HumanoidState::POSITIONING:
-            //insert here
+            if(targetClassID == DetectNetController::ClassID::CUP){
+                Position((1.0/4.0) * detectnetController->GetCameraWidth());
+            } else if(targetClassID == DetectNetController::ClassID::TRASHCAN){
+                Position();
+            }
             break;
         case Humanoid::HumanoidState::GRABBING:
             //insert here
@@ -89,6 +95,22 @@ void Humanoid::Position(float xOffset){
     
 }
         
+bool Humanoid::Searching() {
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_FRONTAL_LEFT);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    sleep(1);
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_DORSAL_RIGHT);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    sleep(1);
+
+    if(detectnetController->GetTargetBB(targetClassID).size() == 0){
+       return false; 
+    } else {
+       return true;
+    }
+}
+
+ 
 /*void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
     
     detectnetController->SetDetectNetLoopLock(true);
