@@ -37,7 +37,9 @@ class Humanoid {
         void GrabVerticalCup();
         
         void ReleaseCup();
-        
+
+        void Grab();
+
         SerialHandler* serialHandler;
         Arm* arm;
         DetectNetController* detectnetController;

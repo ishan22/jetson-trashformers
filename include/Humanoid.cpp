@@ -31,11 +31,6 @@ void Humanoid::UpdateState() {
    
     float xError = detectnetController->GetErrorXOfTargetBB();
     float bbArea = detectnetController->GetAreaOfTargetBB(); 
-    DetectNetController::ClassID classID = detectnetController->ConvertIntToClassID(-1);
-    
-    if(bbArea!= -1) {
-        classID = detectnetController->GetClassIDFromSortedBB(TARGET_BB_IN_SORTED_ARRAY); 
-    }
 
     
     switch(humanoidState) {
@@ -47,16 +42,49 @@ void Humanoid::UpdateState() {
             //insert here
             break;
         case Humanoid::HumanoidState::GRABBING:
-            //insert here
+            Grab();
             break;
         case Humanoid::HumanoidState::RELEASING:
-            //insert here
+            ReleaseCup();
             break;
     }
 
 }
 
-        
+
+
+void Humanoid::Grab() {
+    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_LEFT);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    behaviorController->ChangeState(BehaviorController::ControllerState::STRAFE_LEFT);
+    printf("BEND DOWN\n"); 
+    sleep(1);
+    GrabVerticalCup();
+    behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
+    humanoidState = Humanoid::HumanoidState::SEARCHING;
+    classID = DetectNetController::ClassID::TRASHCAN;
+}
+
+void Humanoid::GrabVerticalCup() { 
+    arm->SetPose(Arm::ArmPose::READY);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::GRABBING);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::GRAB);
+    sleep(2);
+    arm->SetPose(Arm::ArmPose::STORE);
+}
+
+void Humanoid::ReleaseCup() {
+    arm->SetPose(Arm::ArmPose::STORE);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::RELEASE);
+    sleep(1);
+    arm->SetPose(Arm::ArmPose::DEFAULT);
+    humanoidState = Humanoid::HumanoidState::RELEASING;
+    classID = DetectNetController::ClassID::CUP;
+}
+
 /*void Humanoid::UpdateState(int xReactionTolerance, int areaTolerance) {
     
     detectnetController->SetDetectNetLoopLock(true);
@@ -71,7 +99,6 @@ void Humanoid::UpdateState() {
     if(bbArea!= -1) {
         classID = detectnetController->GetClassIDFromSortedBB(TARGET_BB_IN_SORTED_ARRAY); 
     }
-        
 
     if(bbArea == -1) {
         if(shouldGrab){
