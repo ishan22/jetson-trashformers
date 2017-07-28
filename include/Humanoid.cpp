@@ -34,11 +34,13 @@ void Humanoid::UpdateState() {
     switch(humanoidState) {
         default:
         case Humanoid::HumanoidState::SEARCHING:
+            printf("STATE: SEARCHING\n");
             if(Searching()) {
                 humanoidState = HumanoidState::POSITIONING;
             }
             break;
         case Humanoid::HumanoidState::POSITIONING:
+            printf("STATE: POSITIONING\n");
             if(targetClassID == DetectNetController::ClassID::CUP){
                 Position((1.0/4.0) * detectnetController->GetCameraWidth());
             } else if(targetClassID == DetectNetController::ClassID::TRASHCAN){
@@ -46,9 +48,11 @@ void Humanoid::UpdateState() {
             }
             break;
         case Humanoid::HumanoidState::GRABBING:
+            printf("STATE: GRABBING\n");
             //insert here
             break;
         case Humanoid::HumanoidState::RELEASING:
+            printf("STATE: RELEASING\n");
             //insert here
             break;
     }
@@ -63,12 +67,12 @@ void Humanoid::Position(float xOffset){
     float xReactionTolerance = 0.10 * detectnetController->GetCameraWidth(); 
     float xError = detectnetController->GetErrorXOfTargetBB(xOffset);
 
-    if(detectnetController->GetTargetBB(targetClassID).size() == 0){ //NO BB FOUND
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){ //NO BB IS FOUND
         if(lowFrame && targetClassID == DetectNetController::ClassID::TRASHCAN) { //class ID of trashcan
-            humanoidState = HumanoidState::GRABBING;
+            humanoidState = HumanoidState::RELEASING;
             lowFrame = false;
         } else if(lowFrame && targetClassID == DetectNetController::ClassID::CUP) {
-            humanoidState = HumanoidState::RELEASING;
+            humanoidState = HumanoidState::GRABBING;
             lowFrame = false;
         } 
     } else if(xError >= xReactionTolerance) {
@@ -83,7 +87,7 @@ void Humanoid::Position(float xOffset){
         behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     } 
 
-    if(detectnetController->GetTargetBB(targetClassID).size() == 0){
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){
         //Don't change variables
     } else if( detectnetController->GetCenterYFromBB(detectnetController->GetTargetBB(targetClassID)) > ((2.0/3.0) * detectnetController->GetCameraHeight()) ){
         printf("CLASS ID: %i\n", (int)targetClassID);
@@ -92,6 +96,8 @@ void Humanoid::Position(float xOffset){
     else {
         lowFrame = false; 
     }
+    
+    sleep(1);
     
 }
         
@@ -103,7 +109,7 @@ bool Humanoid::Searching() {
     behaviorController->ChangeState(BehaviorController::ControllerState::STOP);
     sleep(1);
 
-    if(detectnetController->GetTargetBB(targetClassID).size() == 0){
+    if(detectnetController->ConvertIntToClassID(detectnetController->GetTargetBB(targetClassID)[4]) == DetectNetController::ClassID::UNKNOWN){
        return false; 
     } else {
        return true;

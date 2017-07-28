@@ -47,7 +47,7 @@ class Humanoid {
         KeyboardController* keyboardController;
         bool lowFrame = false;
         
-        HumanoidState humanoidState;
+        HumanoidState humanoidState = HumanoidState::SEARCHING;
         DetectNetController::ClassID targetClassID = DetectNetController::ClassID::CUP;  
         bool Searching();
         void Position();

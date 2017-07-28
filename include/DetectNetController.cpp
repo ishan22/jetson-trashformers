@@ -81,12 +81,14 @@ std::array<float, 5> DetectNetController::GetTargetBB(){
 //assumes array has been sorted
 std::array<float, 5> DetectNetController::GetTargetBB(DetectNetController::ClassID classID){
     std::vector< std::array<float, 5> > sortedArray = bbArraySorted;
-    if(sortedArray.size() == 0) return std::array<float, 5>();
+    std::array<float, 5> emptySet;
+    emptySet.fill(-1);
+    if(sortedArray.size() == 0) return emptySet;
     for(int i=0; i<(int)sortedArray.size(); i++) {
         if(ConvertIntToClassID((int)(sortedArray[i][4])) == classID)
             return sortedArray[i]; 
     }
-    return std::array<float, 5>();
+    return emptySet;
 }
 
 float DetectNetController::GetAreaOfTargetBB(){
