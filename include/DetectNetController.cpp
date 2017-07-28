@@ -78,6 +78,16 @@ std::array<float, 5> DetectNetController::GetTargetBB(){
     else return std::array<float, 5>();
 }
 
+std::array<float, 5> DetectNetController::GetTargetBB(DetectNetController::ClassID classID){
+    std::vector< std::array<float, 5> > sortedArray = SortBBArrayByTargetDistance();
+    if(sortedArray.size() == 0) return std::array<float, 5>();
+    for(int i=0; i<sortedArray.size(); i++) {
+        if(ConvertIntToClassID((int)(sortedArray[i][4])) == classID)
+            return sortedArray[i]; 
+    }
+    return std::array<float, 5>();
+}
+
 float DetectNetController::GetAreaOfTargetBB(){
     if(bbArraySorted.size() < 1) return -1;
     std::array<float, 5> bb = bbArraySorted[0];

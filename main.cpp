@@ -49,7 +49,7 @@ int main (int argc, char** argv){
     int areaTolerance = 2.00 * humanoid->detectnetController->GetCameraWidth() * humanoid->detectnetController->GetCameraHeight();
 
     while(!humanoid->detectnetController->ReadStopSignal()){
-        humanoid->UpdateState(xReactionTolerance, areaTolerance);
+        humanoid->UpdateState();
     }
 
     humanoid->detectnetController->JoinDetectThread();

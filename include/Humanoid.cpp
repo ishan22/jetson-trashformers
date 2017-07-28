@@ -34,16 +34,16 @@ void Humanoid::UpdateState() {
     
     switch(humanoidState) {
         default:
-        case SEARCHING:
+        case Humanoid::HumanoidState::SEARCHING:
             //insert here
             break;
-        case POSITIONING:
+        case Humanoid::HumanoidState::POSITIONING:
             //insert here
             break;
-        case GRABBING:
+        case Humanoid::HumanoidState::GRABBING:
             //insert here
             break;
-        case RELEASING:
+        case Humanoid::HumanoidState::RELEASING:
             //insert here
             break;
     }
