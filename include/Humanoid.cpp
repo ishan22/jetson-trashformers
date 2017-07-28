@@ -89,7 +89,7 @@ void Humanoid::ReleaseCup() {
     arm->SetPose(Arm::ArmPose::RELEASE);
     sleep(1);
     arm->SetPose(Arm::ArmPose::DEFAULT);
-    humanoidState = Humanoid::HumanoidState::RELEASING;
+    humanoidState = Humanoid::HumanoidState::SEARCHING;
     targetClassID = DetectNetController::ClassID::CUP;
 }
 
