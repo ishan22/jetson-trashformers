@@ -83,11 +83,12 @@ void Humanoid::GrabVerticalCup() {
 }
 
 void Humanoid::ReleaseCup() {
-    behaviorController->ChangeState(BehaviorController::ControllerState::DIAGONAL_LEFT);
     arm->SetPose(Arm::ArmPose::RELEASE);
+    sleep(1);
     arm->SetPose(Arm::ArmPose::DEFAULT);
-
-    for(int i=0; i < 4; i++){
+    sleep(1);
+    
+    for(int i=0; i < 4; i++) {
         Turn(1);
     }
 
